@@ -1,8 +1,9 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 
-#include "doctest.h"
 #include "Bullet.h" 
+#include "lander.h"
+#include "missile.h"
 
 TEST_CASE("Bullet initialization") {
     sf::Vector2f position(100, 100);
@@ -63,7 +64,6 @@ TEST_CASE("Bullet setActive") {
     CHECK(bullet.isActive() == false);
 }
 
-#include "lander.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                   Lander                                                       //
