@@ -40,6 +40,14 @@ int main(){
     if(!font.loadFromFile("resources/sansation.ttf"))
 	return EXIT_FAILURE;
 
+    // Initialise Game instructions
+    sf::Text playInstructions;
+    playInstructions.setFont(font);
+    playInstructions.setCharacterSize(20);
+    playInstructions.setPosition(gameWidth/2-400, gameHeight/2+100);
+    playInstructions.setFillColor(sf::Color::White);
+    playInstructions.setString("Use WASD to move and space to shoot");
+
     // Initialize the pause message
     sf::Text pauseMessage;
     pauseMessage.setFont(font);
@@ -90,7 +98,7 @@ int main(){
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && (spaceShip.getPosition().y > 0)) {
                 spaceShip.move(0.f, -shipSpeed * deltaTime);
             }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && (spaceShip.getPosition().y + spaceShip.getLocalBounds().height < gameHeight)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && (spaceShip.getPosition().y + spaceShip.getLocalBounds().height < gameHeight-75)) {
                 spaceShip.move(0.f, shipSpeed * deltaTime);
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && (spaceShip.getPosition().x > 25)) {
@@ -98,7 +106,7 @@ int main(){
                 spaceShip.setScale(scale,scale);
                 isleft = true;
             }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && (spaceShip.getPosition().x + spaceShip.getLocalBounds().width < gameWidth-50)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && (spaceShip.getPosition().x + spaceShip.getLocalBounds().width < gameWidth)) {
                 spaceShip.move(shipSpeed * deltaTime, 0.f);
                 spaceShip.setScale(-scale,scale);
                 isleft = false;
@@ -118,6 +126,7 @@ int main(){
         else{
             // Draw the pause message
 	        window.draw(pauseMessage);
+            window.draw(playInstructions);
         }
         
         window.display();
