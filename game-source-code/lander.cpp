@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <math.h>
+#include <vector>
+#include "missile.h"
 
 Lander::Lander(sf::Vector2f startPosition) {
     if (!landerTexture.loadFromFile("assets/lander.png")) {
@@ -11,6 +13,14 @@ Lander::Lander(sf::Vector2f startPosition) {
     landerSprite.setScale(5.5f, 5.5f); // Adjust the scale as needed
     landerSprite.setPosition(startPosition);
     speed = 200.0f; // Adjust the speed as needed
+
+    // Initialize the missiles vector
+    missiles = std::vector<Missile>();
+
+    missileTimer.restart(); // Start the timer
+    minDelay = 3.0f; // Minimum delay in seconds
+    maxDelay = 10.0f; // Maximum delay in seconds
+    randomDelay = minDelay + static_cast<float>(std::rand()) / (RAND_MAX / (maxDelay - minDelay));
 }
 
 void Lander::updatePosition(sf::Vector2f spaceshipPosition, float deltaTime) {
@@ -34,6 +44,48 @@ sf::Vector2f Lander::getPosition() const {
     return landerSprite.getPosition();
 }
 
+sf::FloatRect Lander::getHitBox() {
+        return landerSprite.getGlobalBounds();
+}
+
 void Lander::draw(sf::RenderWindow& window) {
     window.draw(landerSprite);
+}
+
+void Lander::missileCreate(sf::Vector2f spaceshipPosition) {
+    Missile missile(landerSprite.getPosition(), spaceshipPosition);
+    missiles.push_back(missile);
+}
+
+void Lander::missileShoot(float deltaTime, int gameWidth, int gameHeight, sf::Vector2f spaceshipPosition ) {
+   if (missileTimer.getElapsedTime().asSeconds() >= randomDelay) {
+
+        // Create a missile with the calculated direction
+        Missile missile(landerSprite.getPosition(), spaceshipPosition);
+        missiles.push_back(missile);
+
+        missileTimer.restart(); // Reset the timer
+        // Generate a new random shooting delay
+        randomDelay = minDelay + static_cast<float>(std::rand()) / (RAND_MAX / (maxDelay - minDelay));
+    }
+
+    // Update existing missiles
+    missileUpdate(deltaTime, gameWidth, gameHeight);
+}
+
+void Lander::missileUpdate(float deltaTime, int gameWidth, int gameHeight) {
+    for (size_t i = 0; i < missiles.size(); ++i) {
+        missiles[i].updatePosition(deltaTime);
+        if (missiles[i].isOutOfBounds(gameWidth, gameHeight)) {
+            // Remove missiles that are out of bounds
+            missiles.erase(missiles.begin() + i);
+            --i;
+        }
+    }
+}
+
+void Lander::missileDraw(sf::RenderWindow& window) {
+    for (Missile& missile : missiles) {
+        missile.draw(window);
+    }
 }
