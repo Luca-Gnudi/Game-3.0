@@ -30,6 +30,10 @@ void Lander::updatePosition(sf::Vector2f spaceshipPosition, float deltaTime) {
     landerSprite.move(direction * moveSpeed * deltaTime);
 }
 
+sf::Vector2f Lander::getPosition() const {
+    return landerSprite.getPosition();
+}
+
 void Lander::draw(sf::RenderWindow& window) {
     window.draw(landerSprite);
 }

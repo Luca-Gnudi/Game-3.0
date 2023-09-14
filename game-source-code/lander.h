@@ -12,6 +12,7 @@ public:
     Lander(sf::Vector2f startPosition); // Constructor
     void updatePosition(sf::Vector2f spaceshipPosition, float deltaTime);
     void draw(sf::RenderWindow& window);
+    sf::Vector2f getPosition() const;
 
 private:
     sf::Sprite landerSprite;
