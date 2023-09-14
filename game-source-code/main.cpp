@@ -64,6 +64,9 @@ int main(){
     sf::Clock clock;
     auto isPlaying = false;
 
+    sf::Vector2f centerPosition(gameWidth / 2.0f, gameHeight / 2.0f);
+    Lander lander(centerPosition); // Specify the initial position
+
     auto isleft = true;//bool for the direction that the lazer shoots.
     
     std::vector<Bullet> bullets;
@@ -145,8 +148,12 @@ int main(){
                 bullet.draw(window);
             }
         
-            window.draw(spaceShip);
-            
+           // Call updateMissile to handle missile shooting
+            lander.missileShoot(deltaTime, gameWidth, gameHeight, spaceShip.getPosition());
+            // Update and draw the enemy
+            lander.updatePosition(spaceShip.getPosition(), deltaTime);
+            lander.draw(window);
+            lander.missileDraw(window);
         }
         else{
             // Draw the pause message
