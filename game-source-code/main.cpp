@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include "Bullet.h"
 
 
 int main(){
@@ -65,7 +66,8 @@ int main(){
 
     auto isleft = true;//bool for the direction that the lazer shoots.
     
-
+    std::vector<Bullet> bullets;
+    auto bulletSpeed = 40.f;
     while (window.isOpen()){
         
      //bool isLazers = false;//bool to determine if lazers should be drawn.
@@ -111,14 +113,37 @@ int main(){
                 spaceShip.setScale(-scale,scale);
                 isleft = false;
             }
-
+             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+            if (isleft){
+                Bullet bullet(spaceShip.getPosition(), -1, bulletSpeed);
+                bullet.setActive(true);
+                bullets.push_back(bullet);
+            }
+            else {
+                Bullet bullet(spaceShip.getPosition(), 1, bulletSpeed);
+                bullet.setActive(true);
+                bullets.push_back(bullet);
+            }
+            }
 }
+
+            for (auto& bullet : bullets) {
+                bullet.update();
+            }
+
+
          //rendering
         window.clear();
         window.draw(Background);
         if(isPlaying){
 
             float deltaTime = clock.restart().asSeconds();
+            Bullet::removeInactiveBullets(bullets);
+            window.draw(spaceShip);
+
+            for (auto& bullet : bullets) {
+                bullet.draw(window);
+            }
         
             window.draw(spaceShip);
             
