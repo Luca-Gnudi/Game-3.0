@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "Bullet.h"
-
+#include "lander.h"
 
 int main(){
     const int gameWidth = 1600; //The width of the game screen.
@@ -10,7 +10,7 @@ int main(){
     window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);//Helps reduce toll on processing.
     sf::Texture BackgroundTexture;
-    if(!BackgroundTexture.loadFromFile("/resources/Space-Background-Image-7.jpg")){
+    if(!BackgroundTexture.loadFromFile("resources/Space-Background-Image-7.jpg")){
         return EXIT_FAILURE;
     }
    
