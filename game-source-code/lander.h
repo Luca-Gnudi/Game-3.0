@@ -10,7 +10,7 @@
 class Lander {
 public:
     Lander(sf::Vector2f startPosition); // Constructor
-    void update(float deltaTime);
+    void updatePosition(sf::Vector2f spaceshipPosition, float deltaTime);
     void draw(sf::RenderWindow& window);
 
 private:
