@@ -5,7 +5,7 @@
 
 Missile::Missile(sf::Vector2f position, sf::Vector2f targetPosition) {
     missileTexture = new sf::Texture;
-    if (!missileTexture->loadFromFile("assets/missile.png")) {
+    if (!missileTexture->loadFromFile("resources/assets/missile.png")) {
         std::cout << "Could not load missile image file" << std::endl;
     }
     missileSprite.setTexture(*missileTexture);

@@ -6,7 +6,7 @@
 #include "missile.h"
 
 Lander::Lander(sf::Vector2f startPosition) {
-    if (!landerTexture.loadFromFile("assets/lander.png")) {
+    if (!landerTexture.loadFromFile("resources/assets/lander.png")) {
         std::cout << "Could not load lander image file";
     }
     landerSprite.setTexture(landerTexture);
