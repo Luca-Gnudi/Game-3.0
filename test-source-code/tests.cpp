@@ -1,9 +1,13 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 
-#include "doctest.h"
 #include "Bullet.h" 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//                                          Bullet                                               //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//Checks that bullet is created properly.
 TEST_CASE("Bullet initialization") {
     sf::Vector2f position(100, 100);
     int dir = 1;
@@ -17,6 +21,7 @@ TEST_CASE("Bullet initialization") {
     CHECK(bullet.shape.getFillColor() == sf::Color::Green);
 }
 
+//Test that the bullet moves correctly.
 TEST_CASE("Bullet update") {
     sf::Vector2f position(100, 100);
     int dir = 1;
@@ -46,7 +51,6 @@ TEST_CASE("Bullet draw") {
     bullet.draw(window);
 
     // Manually check if bullet is drawn correctly in the window
-    // You may need to use a more advanced testing library for this, doctest isn't designed for graphical testing
 }
 
 TEST_CASE("Bullet setActive") {
