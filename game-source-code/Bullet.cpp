@@ -1,11 +1,12 @@
 #include "Bullet.h"
 
 #include "Bullet.h"
+#include <iostream>
 
 Bullet::Bullet(  sf::Vector2f position, int dir, float velocity)
     : velocity(velocity), direction(dir), active(false) {
-    shape.setSize(sf::Vector2f(20, 5));
-    shape.setPosition(position-sf::Vector2f(0,-51));
+    shape.setSize(sf::Vector2f(20, 3));
+    shape.setPosition(position-sf::Vector2f(0,-82));
     shape.setFillColor(sf::Color::Green);
 }
 
