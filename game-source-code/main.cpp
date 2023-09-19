@@ -2,6 +2,11 @@
 #include "Bullet.h"
 #include "lander.h"
 
+// Collision detection logic
+bool isCollision(const sf::FloatRect& rect1, const sf::FloatRect& rect2) {
+    return rect1.intersects(rect2);
+}
+
 int main(){
     const int gameWidth = 1600; //The width of the game screen.
     const int gameHeight = 900; //The height of the game screen.
@@ -35,6 +40,9 @@ int main(){
     spaceShip.setPosition(spaceShipPosition);
     spaceShip.setOrigin(sf::Vector2f(scale,scale));
     const float shipSpeed = 1000.f;
+
+    //Create a hitbox for the space ship
+    sf::FloatRect spaceShipHitBox;
 
     // Load the text font
     sf::Font font;
@@ -127,6 +135,23 @@ int main(){
                 bullet.setActive(true);
                 bullets.push_back(bullet);
             }
+            }
+
+            spaceShipHitBox = spaceShip.getGlobalBounds();
+
+            // Check collision with missiles
+            for (size_t i = 0; i < lander.missiles.size(); ++i) {
+               if (spaceShipHitBox.intersects(lander.missiles[i].getHitBox())) {
+                  isPlaying = false;
+                  pauseMessage.setString("Game Over!\nPress Enter to restart or\nescape to exit");
+                  break; // Exit the loop early, as we already detected a collision
+                }
+            }
+            
+            sf::FloatRect landerHitBox = lander.getHitBox();
+            if (isCollision(spaceShipHitBox,landerHitBox)){
+                isPlaying = false;
+                pauseMessage.setString("Game Over!\nPress Enter to restart or\nescape to exit");
             }
 }
 
