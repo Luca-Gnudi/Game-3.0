@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
-
+#include "Bullet.h"
+#include "lander.h"
 
 int main(){
     const int gameWidth = 1600; //The width of the game screen.
@@ -9,7 +10,7 @@ int main(){
     window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);//Helps reduce toll on processing.
     sf::Texture BackgroundTexture;
-    if(!BackgroundTexture.loadFromFile("/resources/Space-Background-Image-7.jpg")){
+    if(!BackgroundTexture.loadFromFile("resources/Space-Background-Image-7.jpg")){
         return EXIT_FAILURE;
     }
    
@@ -63,9 +64,13 @@ int main(){
     sf::Clock clock;
     auto isPlaying = false;
 
+    sf::Vector2f centerPosition(gameWidth / 2.0f, gameHeight / 2.0f);
+    Lander lander(centerPosition); // Specify the initial position
+
     auto isleft = true;//bool for the direction that the lazer shoots.
     
-
+    std::vector<Bullet> bullets;
+    auto bulletSpeed = 40.f;
     while (window.isOpen()){
         
      //bool isLazers = false;//bool to determine if lazers should be drawn.
@@ -111,17 +116,44 @@ int main(){
                 spaceShip.setScale(-scale,scale);
                 isleft = false;
             }
-
+             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+            if (isleft){
+                Bullet bullet(spaceShip.getPosition(), -1, bulletSpeed);
+                bullet.setActive(true);
+                bullets.push_back(bullet);
+            }
+            else {
+                Bullet bullet(spaceShip.getPosition(), 1, bulletSpeed);
+                bullet.setActive(true);
+                bullets.push_back(bullet);
+            }
+            }
 }
+
+            for (auto& bullet : bullets) {
+                bullet.update();
+            }
+
+
          //rendering
         window.clear();
         window.draw(Background);
         if(isPlaying){
 
             float deltaTime = clock.restart().asSeconds();
-        
+            Bullet::removeInactiveBullets(bullets);
             window.draw(spaceShip);
-            
+
+            for (auto& bullet : bullets) {
+                bullet.draw(window);
+            }
+        
+           // Call updateMissile to handle missile shooting
+            lander.missileShoot(deltaTime, gameWidth, gameHeight, spaceShip.getPosition());
+            // Update and draw the enemy
+            lander.updatePosition(spaceShip.getPosition(), deltaTime);
+            lander.draw(window);
+            lander.missileDraw(window);
         }
         else{
             // Draw the pause message
@@ -135,8 +167,3 @@ int main(){
 }
  
 }
-
-
-  
-
-
