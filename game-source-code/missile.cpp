@@ -24,7 +24,15 @@ Missile::Missile(sf::Vector2f position, sf::Vector2f targetPosition) {
 }
 
 sf::FloatRect Missile::getHitBox() {
-    return missileSprite.getGlobalBounds();
+    sf::FloatRect missileHitBox;
+    auto scale = 5.5f;
+
+    missileHitBox.left = missileSprite.getPosition().x + 12*scale;
+    missileHitBox.top = missileSprite.getPosition().y + 14*scale;
+    missileHitBox.width = 9*scale;
+    missileHitBox.height = 9*scale;
+
+    return missileHitBox;
 }
 
 void Missile::updatePosition(float deltaTime) {

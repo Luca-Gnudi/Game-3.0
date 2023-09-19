@@ -45,7 +45,15 @@ sf::Vector2f Lander::getPosition() const {
 }
 
 sf::FloatRect Lander::getHitBox() {
-        return landerSprite.getGlobalBounds();
+    sf::FloatRect landerHitBox;
+    auto scale = 5.5f;
+
+    landerHitBox.left = landerSprite.getPosition().x + 5*scale;
+    landerHitBox.top = landerSprite.getPosition().y + 7*scale;
+    landerHitBox.width = 24*scale;
+    landerHitBox.height = 22*scale;
+
+    return landerHitBox;
 }
 
 void Lander::draw(sf::RenderWindow& window) {

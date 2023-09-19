@@ -136,9 +136,18 @@ int main(){
                 bullets.push_back(bullet);
             }
             }
-
-            spaceShipHitBox = spaceShip.getGlobalBounds();
-
+            if (isleft){
+            spaceShipHitBox.left = spaceShip.getPosition().x + 8*scale;
+            spaceShipHitBox.top = spaceShip.getPosition().y + 10*scale;
+            spaceShipHitBox.width = 18*scale;
+            spaceShipHitBox.height = 10*scale;
+            }
+            else{
+            spaceShipHitBox.left = spaceShip.getPosition().x - 20*scale;
+            spaceShipHitBox.top = spaceShip.getPosition().y + 10*scale;
+            spaceShipHitBox.width = 18*scale;
+            spaceShipHitBox.height = 10*scale;
+            }
             // Check collision with missiles
             for (size_t i = 0; i < lander.missiles.size(); ++i) {
                if (spaceShipHitBox.intersects(lander.missiles[i].getHitBox())) {
@@ -176,7 +185,12 @@ int main(){
            // Call updateMissile to handle missile shooting
             lander.missileShoot(deltaTime, gameWidth, gameHeight, spaceShip.getPosition());
             // Update and draw the enemy
-            lander.updatePosition(spaceShip.getPosition(), deltaTime);
+            if (isleft){
+                lander.updatePosition(spaceShip.getPosition() + sf::Vector2f(16*scale,0), deltaTime);
+            }
+            else{
+                lander.updatePosition(spaceShip.getPosition() - sf::Vector2f(16*scale,0), deltaTime);
+            }
             lander.draw(window);
             lander.missileDraw(window);
         }
