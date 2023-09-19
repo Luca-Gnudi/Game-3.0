@@ -10,7 +10,7 @@ int main(){
     
     sf::RenderWindow window(sf::VideoMode(gameWidth, gameHeight, 50), "Defender Game", sf::Style::Titlebar | sf::Style::Close);
     window.setVerticalSyncEnabled(true);
-    //window.setFramerateLimit(60);//Helps reduce toll on processing.
+    window.setFramerateLimit(60);//Helps reduce toll on processing.
     sf::Texture BackgroundTexture;
     if(!BackgroundTexture.loadFromFile("resources/Space-Background-Image-7.jpg")){
         return EXIT_FAILURE;
@@ -19,6 +19,14 @@ int main(){
     sf::Sprite Background;
     Background.setTexture(BackgroundTexture);
     Background.setPosition(0,0);
+
+    sf::Texture MountainTexture;
+    if(!MountainTexture.loadFromFile("resources/Mountains.png"))
+        return EXIT_FAILURE;
+    sf::Sprite Mountains;
+    Mountains.setTexture(MountainTexture);
+    Mountains.setPosition(0,0);
+    Mountains.setScale(2.5f,2.5f);
     
     sf::Texture spaceShipTexture;
     if (!spaceShipTexture.loadFromFile("resources/assets/space_ship.png")) {
@@ -38,7 +46,7 @@ int main(){
     //spaceShip.setOrigin(sf::Vector2f(scale,scale));
     const float shipSpeed = 1000.f;
 
-    SpaceShip spaceShip(scale, shipSpeed, spaceShipPosition); // Create the spaceShip
+    SpaceShip spaceShip(scale, shipSpeed, spaceShipPosition, Mountains, MountainTexture); // Create the spaceShip
 
     // Load the text font
     sf::Font font;
@@ -149,11 +157,13 @@ int main(){
          //rendering
         window.clear();
         window.draw(Background);
+        //window.draw(Mountains);
         if(isPlaying){
 
             float deltaTime = clock.restart().asSeconds();
             Bullet::removeInactiveBullets(bullets);
             spaceShip.draw(window);
+            spaceShip.GroundDraw(window);
 
             for (auto& bullet : bullets) {
                 bullet.draw(window);
