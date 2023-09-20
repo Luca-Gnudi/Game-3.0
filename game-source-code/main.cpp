@@ -1,7 +1,9 @@
 #include <SFML/Graphics.hpp>
+#include <cmath>
 #include "Bullet.h"
 #include "lander.h"
 #include "explosion.h"
+
 
 // Collision detection logic
 bool isCollision(const sf::FloatRect& rect1, const sf::FloatRect& rect2) {
@@ -73,9 +75,13 @@ int main(){
     sf::Clock clock;
     auto isPlaying = false;
 
-    sf::Vector2f centerPosition(gameWidth / 2.0f, gameHeight / 2.0f);
-    Lander lander(centerPosition); // Specify the initial position
+    
     bool landerDestroyed = false;
+    // Define a vector to store the landers
+    std::vector<Lander> landers;
+    // Define a timer for spawning landers
+    sf::Clock landerSpawnTimer;
+    float spawnInterval = 5.0f;
 
     auto isleft = true;//bool for the direction that the lazer shoots.
     
@@ -141,6 +147,30 @@ int main(){
                 bullets.push_back(bullet);
             }
             }
+
+            // Check if it's time to spawn a new lander
+            if (landerSpawnTimer.getElapsedTime().asSeconds() >= spawnInterval) {
+            // Create a new lander at a random position around the spaceship
+            sf::Vector2f randomOffset;
+            float distance = 200.0f; // Adjust the distance from the spaceship
+            float angle = static_cast<float>(std::rand() % 360); // Random angle in degrees
+            randomOffset.x = std::cos(angle * 3.14159265f / 180) * distance;
+            randomOffset.y = std::sin(angle * 3.14159265f / 180) * distance;
+
+            // Calculate the lander's position relative to the spaceship
+            sf::Vector2f landerPosition = spaceShip.getPosition() + randomOffset;
+
+            // Create the lander and add it to the vector
+            Lander newLander(landerPosition);
+            landers.push_back(newLander);
+
+            // Restart the spawn timer with a new random interval
+            spawnInterval = 2.0f + static_cast<float>(std::rand()) / (RAND_MAX / 6.0f);
+            landerSpawnTimer.restart();
+
+            }
+
+
             if (isleft){
             spaceShipHitBox.left = spaceShip.getPosition().x + 8*scale;
             spaceShipHitBox.top = spaceShip.getPosition().y + 10*scale;
@@ -153,7 +183,9 @@ int main(){
             spaceShipHitBox.width = 14*scale;
             spaceShipHitBox.height = 10*scale;
             }
+
             // Check collision with missiles
+            for (auto& lander : landers){
             for (size_t i = 0; i < lander.missiles.size(); ++i) {
                if (spaceShipHitBox.intersects(lander.missiles[i].getHitBox())) {
                   isPlaying = false;
@@ -161,15 +193,18 @@ int main(){
                   break; // Exit the loop early, as we already detected a collision
                 }
             }
-            
+            }
+
+            for (auto& lander : landers){
             sf::FloatRect landerHitBox = lander.getHitBox();
             if (isCollision(spaceShipHitBox,landerHitBox)){
                 isPlaying = false;
                 pauseMessage.setString("Game Over!\nPress Enter to restart or\nescape to exit");
             }
-            
+            }
             // Check collision between bullets and the lander
             if (!landerDestroyed) {
+              for (auto& lander : landers){
                 for (auto& bullet : bullets) {
                     if (!bullet.isActive()) continue; // Skip inactive bullets
 
@@ -178,11 +213,15 @@ int main(){
                     // Bullet hit the lander
                     bullet.setActive(false); // Deactivate the bullet
                     landerDestroyed = true; // Mark the lander as destroyed
-
+   
                     // Set the explosion position to the lander's position
                     explosion.setPosition(lander.getPosition());
-                    // You can also start the explosion animation here if needed
+
+                    // Restart the explosion animation
                     explosion.startAnimation();
+
+                    // Remove destroyed landers from the vector
+                    landers.erase(std::remove_if(landers.begin(), landers.end(),[](const Lander& lander) { return !lander.isActive(); }), landers.end());
 
                     // Clear any existing missiles
                     lander.missiles.clear();
@@ -192,6 +231,7 @@ int main(){
                     break; // Exit the loop early, as we only need to handle one collision
                     }
                 }
+              }
             }
         }
 
@@ -214,6 +254,7 @@ int main(){
             }
         
            // Call updateMissile to handle missile shooting
+           for (auto& lander : landers){
             lander.missileShoot(deltaTime, gameWidth, gameHeight, spaceShip.getPosition());
             // Update and draw the enemy
             if (isleft){
@@ -223,9 +264,11 @@ int main(){
                 lander.updatePosition(spaceShip.getPosition() - sf::Vector2f(16*scale,0), deltaTime);
             }
             if (!landerDestroyed){
-            lander.updatePosition(spaceShip.getPosition() + sf::Vector2f(16*scale,0), deltaTime);
-            lander.draw(window);
-            lander.missileDraw(window);
+                
+                    lander.updatePosition(spaceShip.getPosition() + sf::Vector2f(16*scale,0), deltaTime);
+                    lander.draw(window);
+                    lander.missileDraw(window);
+                
             }
             else{
                 // Draw the explosion animation
@@ -234,11 +277,10 @@ int main(){
 
                 // Check if the explosion animation has finished
                 if (explosion.isFinished()) {
-                // Reset the lander and related variables
-                lander = Lander(centerPosition);
                 landerDestroyed = false;
                 }
             }
+           }
         }
         else{
             // Draw the pause message

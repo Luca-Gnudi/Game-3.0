@@ -29,6 +29,7 @@ public:
     
     void destroy();
     bool isDestroyed() const;
+    bool isActive() const;
     
 private:
     sf::Sprite landerSprite;
@@ -41,6 +42,7 @@ private:
     float randomDelay;
 
     bool destroyed;
+    bool active;
     Explosion explosion;
 };
 

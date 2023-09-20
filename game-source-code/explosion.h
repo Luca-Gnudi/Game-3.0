@@ -19,7 +19,7 @@ public:
 
 private:
     sf::Sprite explosionSprite;
-    sf::Texture explosionTexture;
+    sf::Texture *explosionTexture;
     int currentFrame;
     int totalFrames;
     float frameDuration;

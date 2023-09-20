@@ -112,15 +112,15 @@ void Lander::missileDraw(sf::RenderWindow& window) {
 }
 
 void Lander::destroy() {
-    /*if (!destroyed) {
-        destroyed = true;
-        explosion.setPosition(landerSprite.getPosition());
-        
-        explosion.startAnimation();
-    } */
-
+    active = false;
+    explosion.setPosition(landerSprite.getPosition());
+    explosion.startAnimation();
 }
 
 bool Lander::isDestroyed() const {
     return destroyed;
+}
+
+bool Lander::isActive() const {
+    return active;
 }

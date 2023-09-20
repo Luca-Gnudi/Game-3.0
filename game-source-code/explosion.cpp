@@ -3,11 +3,11 @@
 
 Explosion::Explosion(sf::Vector2f position = sf::Vector2f(0, 0), int totalFrames = 1, float frameDuration = 0.1f)
     : totalFrames(totalFrames), frameDuration(frameDuration), currentFrame(0), frameTimer(0), finished(false) {
-    
-    if (!explosionTexture.loadFromFile("resources/assets/explosion.png")) {
+    explosionTexture = new sf::Texture;
+    if (!explosionTexture->loadFromFile("resources/assets/explosion.png")) {
         std::cout << "Could not load explosion sprite sheet file";
     }
-    explosionSprite.setTexture(explosionTexture);
+    explosionSprite.setTexture(*explosionTexture);
     explosionSprite.setScale(5.5f,5.5f);
     explosionSprite.setPosition(position);
 }
