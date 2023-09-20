@@ -32,7 +32,7 @@ public:
     
 private:
     sf::Sprite landerSprite;
-    sf::Texture landerTexture;
+    sf::Texture *landerTexture;
     float speed;
 
     sf::Clock missileTimer;

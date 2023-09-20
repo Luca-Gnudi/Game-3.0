@@ -7,10 +7,11 @@
 #include "explosion.h"
 
 Lander::Lander(sf::Vector2f startPosition) : destroyed(false), explosion(startPosition, 6, 0.1f) {
-    if (!landerTexture.loadFromFile("resources/assets/lander.png")) {
+    landerTexture = new sf::Texture;
+    if (!landerTexture->loadFromFile("resources/assets/lander.png")) {
         std::cout << "Could not load lander image file";
     }
-    landerSprite.setTexture(landerTexture);
+    landerSprite.setTexture(*landerTexture);
     landerSprite.setScale(5.5f, 5.5f); // Adjust the scale as needed
     landerSprite.setPosition(startPosition);
     speed = 200.0f; // Adjust the speed as needed
@@ -35,7 +36,7 @@ void Lander::updatePosition(sf::Vector2f spaceshipPosition, float deltaTime) {
     }
 
     // Set the speed at which the lander moves
-    float moveSpeed = 10000.0f; // Adjust the speed as needed
+    float moveSpeed = 5000.0f; // Adjust the speed as needed
 
     // Update the lander's position based on the direction and speed
     landerSprite.move(direction * moveSpeed * deltaTime);

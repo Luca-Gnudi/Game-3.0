@@ -82,7 +82,7 @@ int main(){
     std::vector<Bullet> bullets;
     auto bulletSpeed = 40.f;
 
-    Explosion explosion(lander.getPosition(), 6, 0.005f);
+    Explosion explosion(sf::Vector2f(-1000, -1000),6, 0.005f);
 
     while (window.isOpen()){
         
@@ -179,6 +179,8 @@ int main(){
                     bullet.setActive(false); // Deactivate the bullet
                     landerDestroyed = true; // Mark the lander as destroyed
 
+                    // Set the explosion position to the lander's position
+                    explosion.setPosition(lander.getPosition());
                     // You can also start the explosion animation here if needed
                     explosion.startAnimation();
 
