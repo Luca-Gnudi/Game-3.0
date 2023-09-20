@@ -1,8 +1,25 @@
 #include "explosion.h"
+#include <iostream>
 
-Explosion::Explosion(sf::Texture& texture, sf::Vector2f position, int totalFrames, float frameDuration)
-    : explosionSprite(texture), totalFrames(totalFrames), frameDuration(frameDuration), currentFrame(0), frameTimer(0), finished(false) {
+Explosion::Explosion(sf::Vector2f position = sf::Vector2f(0, 0), int totalFrames = 1, float frameDuration = 0.1f)
+    : totalFrames(totalFrames), frameDuration(frameDuration), currentFrame(0), frameTimer(0), finished(false) {
+    
+    if (!explosionTexture.loadFromFile("resources/assets/explosion.png")) {
+        std::cout << "Could not load explosion sprite sheet file";
+    }
+    explosionSprite.setTexture(explosionTexture);
+    explosionSprite.setScale(5.5f,5.5f);
     explosionSprite.setPosition(position);
+}
+
+void Explosion::setPosition(sf::Vector2f position) {
+    explosionSprite.setPosition(position);
+}
+
+void Explosion::startAnimation() {
+    currentFrame = 0;
+    frameTimer = 0;
+    finished = false;
 }
 
 void Explosion::update(float deltaTime) {

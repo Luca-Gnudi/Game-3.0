@@ -4,8 +4,9 @@
 #include <math.h>
 #include <vector>
 #include "missile.h"
+#include "explosion.h"
 
-Lander::Lander(sf::Vector2f startPosition) {
+Lander::Lander(sf::Vector2f startPosition) : destroyed(false), explosion(startPosition, 6, 0.1f) {
     if (!landerTexture.loadFromFile("resources/assets/lander.png")) {
         std::cout << "Could not load lander image file";
     }
@@ -57,7 +58,18 @@ sf::FloatRect Lander::getHitBox() {
 }
 
 void Lander::draw(sf::RenderWindow& window) {
-    window.draw(landerSprite);
+    if (!destroyed){
+       window.draw(landerSprite);
+    }
+    else {
+        // Draw explosion animation
+        explosion.draw(window);
+
+        // Check if the explosion animation has finished, and perform any cleanup
+        if (explosion.isFinished()) {
+            // Remove the lander or perform other cleanup actions as needed
+        }
+    }
 }
 
 void Lander::missileCreate(sf::Vector2f spaceshipPosition) {
@@ -99,5 +111,15 @@ void Lander::missileDraw(sf::RenderWindow& window) {
 }
 
 void Lander::destroy() {
-    
+    /*if (!destroyed) {
+        destroyed = true;
+        explosion.setPosition(landerSprite.getPosition());
+        
+        explosion.startAnimation();
+    } */
+
+}
+
+bool Lander::isDestroyed() const {
+    return destroyed;
 }

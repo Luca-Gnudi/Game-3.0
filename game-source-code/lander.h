@@ -9,6 +9,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "missile.h"
+#include "explosion.h"
 
 class Lander {
 public:
@@ -38,6 +39,9 @@ private:
     float minDelay;
     float maxDelay;
     float randomDelay;
+
+    bool destroyed;
+    Explosion explosion;
 };
 
 #endif

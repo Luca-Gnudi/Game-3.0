@@ -10,13 +10,16 @@
 
 class Explosion {
 public:
-    Explosion(sf::Texture& texture, sf::Vector2f position, int totalFrames, float frameDuration);
+    Explosion(sf::Vector2f position, int totalFrames, float frameDuration);
+    void setPosition(sf::Vector2f position);
+    void startAnimation();
     void update(float deltaTime);
     void draw(sf::RenderWindow& window);
     bool isFinished() const;
 
 private:
     sf::Sprite explosionSprite;
+    sf::Texture explosionTexture;
     int currentFrame;
     int totalFrames;
     float frameDuration;
