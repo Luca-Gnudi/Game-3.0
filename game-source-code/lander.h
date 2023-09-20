@@ -26,7 +26,9 @@ public:
     void missileShoot(float deltaTime, int gameWidth, int gameHeight, sf::Vector2f spaceshipPosition);
     void missileDraw(sf::RenderWindow& window);
     
-
+    void destroy();
+    bool isDestroyed() const;
+    
 private:
     sf::Sprite landerSprite;
     sf::Texture landerTexture;

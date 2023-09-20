@@ -7,6 +7,10 @@ Bullet::Bullet(  sf::Vector2f position, int dir, float velocity)
     shape.setFillColor(sf::Color::Green);
 }
 
+sf::FloatRect Bullet::getHitBox() {
+    return shape.getGlobalBounds();
+}
+
 void Bullet::update() {
     if (active) {
         shape.move(velocity * direction, 0);

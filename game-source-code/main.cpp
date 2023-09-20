@@ -139,13 +139,13 @@ int main(){
             if (isleft){
             spaceShipHitBox.left = spaceShip.getPosition().x + 8*scale;
             spaceShipHitBox.top = spaceShip.getPosition().y + 10*scale;
-            spaceShipHitBox.width = 18*scale;
+            spaceShipHitBox.width = 14*scale;
             spaceShipHitBox.height = 10*scale;
             }
             else{
             spaceShipHitBox.left = spaceShip.getPosition().x - 20*scale;
             spaceShipHitBox.top = spaceShip.getPosition().y + 10*scale;
-            spaceShipHitBox.width = 18*scale;
+            spaceShipHitBox.width = 14*scale;
             spaceShipHitBox.height = 10*scale;
             }
             // Check collision with missiles

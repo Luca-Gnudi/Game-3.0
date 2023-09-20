@@ -97,3 +97,7 @@ void Lander::missileDraw(sf::RenderWindow& window) {
         missile.draw(window);
     }
 }
+
+void Lander::destroy() {
+    
+}

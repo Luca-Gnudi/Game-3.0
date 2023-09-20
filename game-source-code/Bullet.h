@@ -6,6 +6,7 @@
 class Bullet {
 public:
     Bullet(sf::Vector2f, int dir, float velocity);
+    sf::FloatRect getHitBox();
     void update();
     void draw(sf::RenderWindow& window);
     void setActive(bool isActive);
