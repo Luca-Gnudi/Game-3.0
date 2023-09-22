@@ -47,6 +47,10 @@ int main(){
     //Create a hitbox for the space ship
     sf::FloatRect spaceShipHitBox;
 
+    sf::Clock bulletCooldownTimer;
+    const sf::Time bulletCooldownDuration = sf::seconds(0.5f); // Adjust the cooldown duration as needed
+    bool canShootBullet = true;
+
     // Load the text font
     sf::Font font;
     if(!font.loadFromFile("resources/sansation.ttf"))
@@ -122,20 +126,24 @@ int main(){
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && (spaceShip.getPosition().y > 0)) {
                 spaceShip.move(0.f, -shipSpeed * deltaTime);
             }
+
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && (spaceShip.getPosition().y + spaceShip.getLocalBounds().height < gameHeight-75)) {
                 spaceShip.move(0.f, shipSpeed * deltaTime);
             }
+
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && (spaceShip.getPosition().x > 25)) {
                 spaceShip.move(-shipSpeed * deltaTime, 0.f);
                 spaceShip.setScale(scale,scale);
                 isleft = true;
             }
+
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && (spaceShip.getPosition().x + spaceShip.getLocalBounds().width < gameWidth)) {
                 spaceShip.move(shipSpeed * deltaTime, 0.f);
                 spaceShip.setScale(-scale,scale);
                 isleft = false;
             }
-             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && canShootBullet){
             if (isleft){
                 Bullet bullet(spaceShip.getPosition(), -1, bulletSpeed);
                 bullet.setActive(true);
@@ -146,6 +154,15 @@ int main(){
                 bullet.setActive(true);
                 bullets.push_back(bullet);
             }
+
+             // Start the cooldown timer
+             bulletCooldownTimer.restart();
+             canShootBullet = false; // Prevent shooting until cooldown is over
+            }
+
+            // Check if the cooldown duration has passed
+            if (!canShootBullet && bulletCooldownTimer.getElapsedTime() >= bulletCooldownDuration) {
+                canShootBullet = true; // Allow shooting again
             }
 
             // Check if it's time to spawn a new lander
