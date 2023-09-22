@@ -81,6 +81,7 @@ int main(){
 
     // Define a vector to store the landers
     std::vector<Lander> landers;
+    std::vector<Explosion> explosions;
     // Define a timer for spawning landers
     sf::Clock landerSpawnTimer;
     float spawnInterval = 5.0f;
@@ -89,8 +90,6 @@ int main(){
     
     std::vector<Bullet> bullets;
     auto bulletSpeed = 40.f;
-
-    Explosion explosion(sf::Vector2f(-1000, -1000),6, 0.005f);
 
     while (window.isOpen()){
         
@@ -228,11 +227,11 @@ int main(){
                     bullet.setActive(false); // Deactivate the bullet
                     lander.destroy();
    
-                    // Set the explosion position to the lander's position
-                    explosion.setPosition(lander.getPosition());
+                    Explosion newExplosion(lander.getPosition(), 6, 0.005f);
 
                     // Restart the explosion animation
-                    explosion.startAnimation();
+                    newExplosion.startAnimation();
+                    explosions.push_back(newExplosion);
 
                     // Remove destroyed landers from the vector
                     landers.erase(std::remove_if(landers.begin(), landers.end(),[](const Lander& lander) { return !lander.isActive(); }), landers.end());
@@ -248,7 +247,6 @@ int main(){
         for (auto& bullet : bullets) {
             bullet.update();
         }
-
        
          //rendering
         window.clear();
@@ -262,6 +260,16 @@ int main(){
             for (auto& bullet : bullets) {
                 bullet.draw(window);
             }
+
+            for (auto& explosion : explosions) {
+                explosion.update(deltaTime);
+            }
+
+            for (auto& explosion : explosions) {
+                if (!explosion.isFinished()) {
+                    explosion.draw(window);
+                }
+            }
         
            // Call updateMissile to handle missile shooting
            for (auto& lander : landers){
@@ -274,10 +282,9 @@ int main(){
                 lander.updatePosition(spaceShip.getPosition() - sf::Vector2f(16*scale,0), deltaTime);
             }
 
-                
-                    lander.updatePosition(spaceShip.getPosition() + sf::Vector2f(16*scale,0), deltaTime);
-                    lander.draw(window);
-                    lander.missileDraw(window);
+                lander.updatePosition(spaceShip.getPosition() + sf::Vector2f(16*scale,0), deltaTime);
+                lander.draw(window);
+                lander.missileDraw(window);
                 
            }
         }
