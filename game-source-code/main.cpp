@@ -51,6 +51,8 @@ int main(){
     const sf::Time bulletCooldownDuration = sf::seconds(0.5f); // Adjust the cooldown duration as needed
     bool canShootBullet = true;
 
+    auto landerShot = 0;
+
     // Load the text font
     sf::Font font;
     if(!font.loadFromFile("resources/sansation.ttf"))
@@ -226,6 +228,7 @@ int main(){
                     // Bullet hit the lander
                     bullet.setActive(false); // Deactivate the bullet
                     lander.destroy();
+                    landerShot++;
    
                     Explosion newExplosion(lander.getPosition(), 6, 0.005f);
 
@@ -240,6 +243,13 @@ int main(){
 
                     break; // Exit the loop early, as we only need to handle one collision
                     }
+                  
+                  if (landerShot == 10){
+                    isPlaying = false;
+                    pauseMessage.setString("YOU WON!\nNow go get some fresh air!");
+                    playInstructions.setString("Press Esc to exit the game.");
+                    break;
+                  }
                 }
               }
         }
