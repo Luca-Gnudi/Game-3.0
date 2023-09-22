@@ -59,6 +59,7 @@ sf::FloatRect Lander::getHitBox() {
 }
 
 void Lander::draw(sf::RenderWindow& window) {
+
     if (!destroyed){
        window.draw(landerSprite);
     }
@@ -112,7 +113,7 @@ void Lander::missileDraw(sf::RenderWindow& window) {
 }
 
 void Lander::destroy() {
-    active = false;
+    destroyed = true;
     explosion.setPosition(landerSprite.getPosition());
     explosion.startAnimation();
 }
@@ -122,5 +123,5 @@ bool Lander::isDestroyed() const {
 }
 
 bool Lander::isActive() const {
-    return active;
+    return !destroyed;
 }

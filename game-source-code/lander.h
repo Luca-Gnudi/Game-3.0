@@ -42,7 +42,6 @@ private:
     float randomDelay;
 
     bool destroyed;
-    bool active;
     Explosion explosion;
 };
 

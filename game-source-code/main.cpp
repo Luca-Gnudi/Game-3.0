@@ -79,8 +79,6 @@ int main(){
     sf::Clock clock;
     auto isPlaying = false;
 
-    
-    bool landerDestroyed = false;
     // Define a vector to store the landers
     std::vector<Lander> landers;
     // Define a timer for spawning landers
@@ -220,7 +218,6 @@ int main(){
             }
             }
             // Check collision between bullets and the lander
-            if (!landerDestroyed) {
               for (auto& lander : landers){
                 for (auto& bullet : bullets) {
                     if (!bullet.isActive()) continue; // Skip inactive bullets
@@ -229,7 +226,7 @@ int main(){
                     if (lander.getHitBox().intersects(bulletHitBox)) {
                     // Bullet hit the lander
                     bullet.setActive(false); // Deactivate the bullet
-                    landerDestroyed = true; // Mark the lander as destroyed
+                    lander.destroy();
    
                     // Set the explosion position to the lander's position
                     explosion.setPosition(lander.getPosition());
@@ -240,16 +237,12 @@ int main(){
                     // Remove destroyed landers from the vector
                     landers.erase(std::remove_if(landers.begin(), landers.end(),[](const Lander& lander) { return !lander.isActive(); }), landers.end());
 
-                    // Clear any existing missiles
-                    lander.missiles.clear();
-
                     // Optionally, you can handle other actions when the lander is destroyed
 
                     break; // Exit the loop early, as we only need to handle one collision
                     }
                 }
               }
-            }
         }
 
         for (auto& bullet : bullets) {
@@ -280,23 +273,12 @@ int main(){
             else{
                 lander.updatePosition(spaceShip.getPosition() - sf::Vector2f(16*scale,0), deltaTime);
             }
-            if (!landerDestroyed){
+
                 
                     lander.updatePosition(spaceShip.getPosition() + sf::Vector2f(16*scale,0), deltaTime);
                     lander.draw(window);
                     lander.missileDraw(window);
                 
-            }
-            else{
-                // Draw the explosion animation
-                explosion.update(deltaTime);
-                explosion.draw(window);
-
-                // Check if the explosion animation has finished
-                if (explosion.isFinished()) {
-                landerDestroyed = false;
-                }
-            }
            }
         }
         else{
