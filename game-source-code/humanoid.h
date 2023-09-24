@@ -12,7 +12,7 @@ class Humanoid {
 public:
     Humanoid(sf::Vector2f, int dir, float velocity);
     sf::FloatRect getHitBox();
-    void updatePosition(sf::Vector2f humanoidPosition, float deltaTime);
+    void updatePosition();
     void draw(sf::RenderWindow& window);
     void setActive(bool isActive);
     bool isActive() const;

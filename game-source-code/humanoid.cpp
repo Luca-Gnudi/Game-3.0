@@ -8,13 +8,27 @@ Humanoid::Humanoid( sf::Vector2f startPosition, int dir, float velocity)
         std::cout << "Could not load lander image file";
     }
     humanoidSprite.setTexture(*humanoidTexture);
-    humanoidSprite.setScale(1.5f, 1.5f); // Adjust the scale as needed
+    humanoidSprite.setScale(1.0f, 1.0f); // Adjust the scale as needed
     humanoidSprite.setPosition(startPosition);
 }
 
-void Humanoid::updatePosition(sf::Vector2f humanoidPosition, float deltaTime){
+void Humanoid::updatePosition(){
     if (active) {
         humanoidSprite.move(velocity * direction, 0);
+
+        if (humanoidSprite.getPosition().x < 100){
+           direction = 1;
+        }
+        else if (humanoidSprite.getPosition().x + 60 > 1550){
+           direction = -1;
+        }
+
+        if (direction == 1){
+            humanoidSprite.setScale(-1.0f, 1.0f);
+        }
+        else if (direction == -1){
+            humanoidSprite.setScale(1.0f, 1.0f);
+        }
     }
 }
 
