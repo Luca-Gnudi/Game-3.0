@@ -9,7 +9,7 @@ Missile::Missile(sf::Vector2f position, sf::Vector2f targetPosition) {
         std::cout << "Could not load missile image file" << std::endl;
     }
     missileSprite.setTexture(*missileTexture);
-    missileSprite.setScale(5.0f, 5.0f);
+    missileSprite.setScale(2.0f, 2.0f);
     missileSprite.setPosition(position);
     speed = 20000.0f; // Adjust the speed as needed
 
@@ -25,7 +25,7 @@ Missile::Missile(sf::Vector2f position, sf::Vector2f targetPosition) {
 
 sf::FloatRect Missile::getHitBox() {
     sf::FloatRect missileHitBox;
-    auto scale = 5.5f;
+    auto scale = 2.0f;
 
     missileHitBox.left = missileSprite.getPosition().x + 12*scale;
     missileHitBox.top = missileSprite.getPosition().y + 14*scale;

@@ -8,7 +8,7 @@ Explosion::Explosion(sf::Vector2f position = sf::Vector2f(0, 0), int totalFrames
         std::cout << "Could not load explosion sprite sheet file";
     }
     explosionSprite.setTexture(*explosionTexture);
-    explosionSprite.setScale(5.5f,5.5f);
+    explosionSprite.setScale(3.5f,3.5f);
     explosionSprite.setPosition(position);
 }
 

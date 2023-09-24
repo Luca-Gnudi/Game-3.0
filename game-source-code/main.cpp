@@ -33,7 +33,7 @@ int main(){
 
     // Create a sprite for the space ship and set its texture
     sf::Sprite spaceShip;
-    float scale = 5.5f;
+    float scale = 2.5f;
     spaceShip.setTexture(spaceShipTexture);
     spaceShip.setScale(scale, scale); // Adjust the scale as needed
 
@@ -113,8 +113,11 @@ int main(){
 		    isPlaying = true;
 		    clock.restart();
 
-		    // Reset the position of the paddles and ball
+		    // Reset the position of space ship and clear alien objects
 		    spaceShip.setPosition(spaceShipPosition);
+            landers.clear();
+            explosions.clear();
+            landerShot = 0;
 		}
 	    }
 	}
@@ -168,7 +171,7 @@ int main(){
             if (landerSpawnTimer.getElapsedTime().asSeconds() >= spawnInterval) {
             // Create a new lander at a random position around the spaceship
             sf::Vector2f randomOffset;
-            float distance = 200.0f; // Adjust the distance from the spaceship
+            float distance = 800.0f; // Adjust the distance from the spaceship
             float angle = static_cast<float>(std::rand() % 360); // Random angle in degrees
             randomOffset.x = std::cos(angle * 3.14159265f / 180) * distance;
             randomOffset.y = std::sin(angle * 3.14159265f / 180) * distance;
