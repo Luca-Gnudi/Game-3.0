@@ -26,6 +26,7 @@ Lander::Lander(sf::Vector2f startPosition) : destroyed(false), explosion(startPo
 }
 
 void Lander::updatePosition(const std::vector<Humanoid>& humanoids, float deltaTime) {
+  if (!isCarryingHumanoid){
      // Choose the humanoid to chase (for example, the closest humanoid)
     sf::Vector2f closestHumanoidPosition;
     float closestHumanoidDistance = std::numeric_limits<float>::max();
@@ -50,10 +51,20 @@ void Lander::updatePosition(const std::vector<Humanoid>& humanoids, float deltaT
     }
 
     // Set the speed at which the lander moves
-    float moveSpeed = 500.0f; // Adjust the speed as needed
+    float moveSpeed = 10000.0f; // Adjust the speed as needed
 
     // Update the lander's position based on the direction and speed
     landerSprite.move(direction * moveSpeed * deltaTime);
+  } else {
+        // The lander's behavior when carrying a humanoid
+        float moveSpeed = 100.0f; // Adjust the upward speed as needed
+        landerSprite.move(0.0f, -moveSpeed * deltaTime);
+
+        // Check if the lander is offscreen at the top and release the humanoid
+        if (landerSprite.getPosition().y < 0) {
+            isCarryingHumanoid = false;
+        }
+    }
 }
 
 sf::Vector2f Lander::getPosition() const {
@@ -141,17 +152,21 @@ bool Lander::isActive() const {
 }
 
 void Lander::captureHumanoid(const Humanoid& humanoid) {
-    isCarryingHumanoid = true;
-    capturedHumanoidPosition = humanoid.getPosition();
+    if (!isCarryingHumanoid) {
+        isCarryingHumanoid = true;
+        capturedHumanoidPosition = humanoid.getPosition();
+    }
 }
 
 void Lander::moveWithHumanoid(float deltaTime) {
     if (isCarryingHumanoid) {
-        // Move the lander upwards (you can adjust the speed)
-        float moveSpeed = 200.0f;
+        // Move the lander straight up
+        float moveSpeed = 200.0f; // Adjust the speed as needed
         landerSprite.move(0.0f, -moveSpeed * deltaTime);
 
-        // Move the captured humanoid along with the lander
-        capturedHumanoidPosition.y -= moveSpeed * deltaTime;
+        // Check if the lander is offscreen at the top and release the humanoid
+        if (landerSprite.getPosition().y < 0) {
+            isCarryingHumanoid = false;
+        }
     }
 }

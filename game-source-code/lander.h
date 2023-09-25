@@ -35,6 +35,8 @@ public:
 
     void captureHumanoid(const Humanoid& humanoid);
     void moveWithHumanoid(float deltaTime);
+
+    bool isCarryingHumanoid;
     
 private:
     sf::Sprite landerSprite;
@@ -49,7 +51,6 @@ private:
     bool destroyed;
     Explosion explosion;
 
-    bool isCarryingHumanoid;
     sf::Vector2f capturedHumanoidPosition;
 };
 
