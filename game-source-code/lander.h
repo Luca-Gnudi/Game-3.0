@@ -10,17 +10,19 @@
 #include <vector>
 #include "missile.h"
 #include "explosion.h"
+#include "humanoid.h"
 
 class Lander {
 public:
 
     Lander(sf::Vector2f startPosition); // Constructor
     sf::FloatRect getHitBox();
-    void updatePosition(sf::Vector2f spaceshipPosition, float deltaTime);
+    void updatePosition(const std::vector<Humanoid>& humanoids, float deltaTime);
     void draw(sf::RenderWindow& window);
     sf::Vector2f getPosition() const;
 
     std::vector<Missile> missiles;
+    std::vector<Humanoid> humanoids;
     
     void missileCreate(sf::Vector2f spaceshipPosition);
     void missileUpdate(float deltaTime, int gameWidth, int gameHeight);
@@ -30,6 +32,9 @@ public:
     void destroy();
     bool isDestroyed() const;
     bool isActive() const;
+
+    void captureHumanoid(const Humanoid& humanoid);
+    void moveWithHumanoid(float deltaTime);
     
 private:
     sf::Sprite landerSprite;
@@ -43,6 +48,9 @@ private:
 
     bool destroyed;
     Explosion explosion;
+
+    bool isCarryingHumanoid;
+    sf::Vector2f capturedHumanoidPosition;
 };
 
 #endif

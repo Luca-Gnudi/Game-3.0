@@ -25,6 +25,8 @@ private:
     float velocity;
     int direction;
     bool active;
+
+    bool captured;
 };
 
 #endif
