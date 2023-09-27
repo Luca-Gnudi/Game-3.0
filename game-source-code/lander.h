@@ -11,6 +11,7 @@
 #include "missile.h"
 #include "explosion.h"
 #include "humanoid.h"
+#include "capturedhumanoid.h"
 
 class Lander {
 public:
@@ -38,6 +39,7 @@ public:
 
     bool isCarryingHumanoid;
     
+    
 private:
     sf::Sprite landerSprite;
     sf::Texture *landerTexture;
@@ -52,6 +54,7 @@ private:
     Explosion explosion;
 
     sf::Vector2f capturedHumanoidPosition;
+    CapturedHumanoid capturedHumanoid;
 };
 
 #endif

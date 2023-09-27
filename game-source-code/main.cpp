@@ -4,6 +4,7 @@
 #include "lander.h"
 #include "explosion.h"
 #include "humanoid.h"
+#include "capturedhumanoid.h"
 
 // Collision detection logic
 bool isCollision(const sf::FloatRect& rect1, const sf::FloatRect& rect2) {
@@ -86,6 +87,7 @@ int main(){
     std::vector<Explosion> explosions;
 
     std::vector<Humanoid> humanoids;
+    std::vector<CapturedHumanoid> capturedHumanoids;
     // Define a timer for spawning landers
     sf::Clock landerSpawnTimer;
     float spawnInterval = 5.0f;
@@ -291,6 +293,14 @@ int main(){
                 if (lander.isCarryingHumanoid) {
                     lander.moveWithHumanoid(deltaTime);
 
+                    // Create and update the captured humanoid
+                    CapturedHumanoid capturedHumanoid;
+                    capturedHumanoids.push_back(capturedHumanoid);
+                    for (CapturedHumanoid& capturedHumanoid : capturedHumanoids) {
+                    capturedHumanoid.setPosition(lander.getPosition());
+                    capturedHumanoid.updatePosition(deltaTime);
+                    }
+
                     // Check if the lander is offscreen at the top and release the humanoid
                     if (lander.getPosition().y < 10 ) {
                     lander.isCarryingHumanoid = false;
@@ -320,6 +330,10 @@ int main(){
 
             for (auto& humanoid : humanoids) {
                 humanoid.draw(window);
+            }
+
+            for (auto& capturedHumanoid : capturedHumanoids) {
+                 capturedHumanoid.draw(window);
             }
 
             for (auto& bullet : bullets) {

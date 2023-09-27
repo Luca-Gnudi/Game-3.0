@@ -5,7 +5,7 @@ Humanoid::Humanoid( sf::Vector2f startPosition, int dir, float velocity)
     : velocity(velocity), direction(dir), active(true){
     humanoidTexture = new sf::Texture;
     if (!humanoidTexture->loadFromFile("resources/assets/Humanoid.png")) {
-        std::cout << "Could not load lander image file";
+        std::cout << "Could not load humanoid image file";
     }
     humanoidSprite.setTexture(*humanoidTexture);
     humanoidSprite.setScale(1.0f, 1.0f); // Adjust the scale as needed
