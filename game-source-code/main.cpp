@@ -293,14 +293,6 @@ int main(){
                 if (lander.isCarryingHumanoid) {
                     lander.moveWithHumanoid(deltaTime);
 
-                    // Create and update the captured humanoid
-                    CapturedHumanoid capturedHumanoid;
-                    capturedHumanoids.push_back(capturedHumanoid);
-                    for (CapturedHumanoid& capturedHumanoid : capturedHumanoids) {
-                    capturedHumanoid.setPosition(lander.getPosition());
-                    capturedHumanoid.updatePosition(deltaTime);
-                    }
-
                     // Check if the lander is offscreen at the top and release the humanoid
                     if (lander.getPosition().y < 10 ) {
                     lander.isCarryingHumanoid = false;
@@ -332,10 +324,6 @@ int main(){
                 humanoid.draw(window);
             }
 
-            for (auto& capturedHumanoid : capturedHumanoids) {
-                 capturedHumanoid.draw(window);
-            }
-
             for (auto& bullet : bullets) {
                 bullet.draw(window);
             }
@@ -357,6 +345,14 @@ int main(){
                 lander.updatePosition(humanoids, deltaTime);
                 lander.draw(window);
                 lander.missileDraw(window);
+
+                // Draw captured humanoids
+                if (lander.isCarryingHumanoid) {
+                CapturedHumanoid capturedHumanoid;
+                capturedHumanoid.setPosition(lander.getPosition());
+                capturedHumanoid.updatePosition(deltaTime);
+                capturedHumanoid.draw(window);
+                }
                 
            }
         }
