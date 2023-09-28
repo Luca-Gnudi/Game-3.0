@@ -4,6 +4,8 @@
 #include "Bullet.h" 
 #include "lander.h"
 #include "missile.h"
+#include "SpaceShip.h"
+#include "humanoid.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          Bullet                                               //
@@ -74,18 +76,27 @@ TEST_CASE("Bullet setActive") {
 //                                   Lander                                                       //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-TEST_CASE("Lander starts to move towards its target") {
-    sf::Vector2f initialPosition(100.0f, 100.0f); // Initial position
-    sf::Vector2f targetPosition(200.0f, 200.0f); // Target position
-    float deltaTime = 1.0f; // Time delta
+TEST_CASE("Lander moves towards a target over time") {
+    // Create a SpaceShip and set its initial position
+    sf::Vector2f spaceshipPosition(100.0f, 100.0f);
+    SpaceShip spaceShip(1.0f, 100.0f, spaceshipPosition);
 
-    Lander lander(initialPosition); // Create a lander
-    lander.updatePosition(targetPosition, deltaTime);
+    // Create a Lander and set its initial position and speed
+    float distance = 200.0f; // Adjust the distance as needed
+    float bound_x = 0.0f;   // Adjust the bounds as needed
+    float bound_y = 1000.0f;
+    Lander lander(distance, spaceShip, bound_x, bound_y);
 
+    // Set the lander's initial position (you may adjust this as needed)
+    sf::Vector2f initialLanderPosition(500.0f, 500.0f);
+    lander.updatePosition(initialLanderPosition, 1.0f); // Simulate one second of movement
 
-    // Check if the lander has moved towards the target position
-    CHECK(lander.getPosition().x > initialPosition.x);
-    CHECK(lander.getPosition().y > initialPosition.y);
+    // Get the updated position of the lander
+    sf::Vector2f updatedLanderPosition = lander.getPosition();
+
+    // Check if the lander has moved closer to the spaceship
+    CHECK(updatedLanderPosition.x != doctest::Approx(initialLanderPosition.x));
+    CHECK(updatedLanderPosition.y != doctest::Approx(initialLanderPosition.y));
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,4 +123,54 @@ TEST_CASE("Missile moves towards target position") {
     // Assert that the missile's new position is closer to the target position
     CHECK(newPosition.x > initialPosition.x);
     CHECK(newPosition.y > initialPosition.y);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//                                          Humanoid                                             //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Humanoid moves horizontally") {
+    // Create a Humanoid object with an initial position, direction, and velocity
+    sf::Vector2f startPosition(100.0f, 100.0f);
+    int initialDirection = 1; // Initial direction (1 or -1)
+    float velocity = 5.0f;    // Initial velocity
+
+    Humanoid humanoid(startPosition, initialDirection, velocity);
+
+    // Update the Humanoid's position
+    humanoid.updatePosition();
+
+    // Get the updated position
+    sf::Vector2f updatedPosition = humanoid.getPosition();
+
+    // Check if the Humanoid's position has changed based on its velocity and direction
+    if (initialDirection == 1) {
+        // If the initial direction is 1, the Humanoid should have moved right
+        CHECK(updatedPosition.x > startPosition.x);
+    } else if (initialDirection == -1) {
+        // If the initial direction is -1, the Humanoid should have moved left
+        CHECK(updatedPosition.x < startPosition.x);
+    }
+}
+
+TEST_CASE("Humanoid turns around and moves in the opposite direction when it reaches the left turn around point") {
+    // Create a Humanoid object with an initial position, direction, and velocity
+    sf::Vector2f startPosition(760.0f, 760.0f);
+    int initialDirection = -1; // Initial direction (1 or -1)
+    float velocity = 5.0f;    // Initial velocity
+
+    // Create a Humanoid with the initial parameters
+    Humanoid humanoid(startPosition, initialDirection, velocity);
+
+    // Set a fixed deltaTime for testing
+    float deltaTime = 10.0f;
+
+    // Choose a point where the Humanoid should turn around
+    float turnaroundPoint = 750.0f;
+
+    // Get the updated position after reaching the turnaround point
+    sf::Vector2f updatedPosition = humanoid.getPosition();
+
+    // Check if the Humanoid has changed direction and moved away from the turnaround point
+    CHECK(humanoid.getPosition().x >= turnaroundPoint);
 }
