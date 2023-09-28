@@ -297,3 +297,87 @@ int main(){
             spaceShip.draw(window);
 
             float deltaTime = clock.restart().asSeconds();
+            Bullet::removeInactiveBullets(bullets);
+            spaceShip.draw(window);
+
+            for (auto& bullet : bullets) {
+                bullet.draw(window);
+            }
+        
+              for (auto& humanoid : humanoids){
+                humanoid.updatePosition();
+            }
+
+            for (auto& humanoid : humanoids) {
+                humanoid.draw(window);
+            }
+
+            for (auto& bullet : bullets) {
+                bullet.draw(window);
+            }
+
+            for (auto& explosion : explosions) {
+                explosion.update(deltaTime);
+            }
+
+            for (auto& explosion : explosions) {
+                if (!explosion.isFinished()) {
+                    explosion.draw(window);
+                }
+            }
+        
+           // Call updateMissile to handle missile shooting
+           for (auto& lander : landers){
+            lander.missileShoot(deltaTime, gameWidth, gameHeight, spaceShip.getPosition());
+            // Update and draw the enemy
+            if (isleft){
+                lander.updatePosition(spaceShip.getPosition() + sf::Vector2f(16*scale,0), deltaTime);
+            }
+            else{
+                lander.updatePosition(spaceShip.getPosition() - sf::Vector2f(16*scale,0), deltaTime);
+            }
+
+                lander.updatePosition(spaceShip.getPosition() + sf::Vector2f(16*scale,0), deltaTime);
+                lander.draw(window);
+                lander.missileDraw(window);
+                
+           }
+        
+
+
+            //Drawing the minimap view.
+            window.setView(MiniMapView);
+
+            window.draw(Background);
+            spaceShip.draw(window);
+            CurrentView.setPosition(spaceShip.getPosition().x, gameHeight/2);//Set the position of the highlighted view.
+            window.draw(CurrentView);
+            
+
+            for (auto& bullet : bullets) {
+                bullet.draw(window);
+            }
+        
+               for (auto& humanoid : humanoids){
+                humanoid.updatePosition();
+            }
+
+            for (auto& humanoid : humanoids) {
+                humanoid.draw(window);
+            }
+
+            for (auto& bullet : bullets) {
+                bullet.draw(window);
+            }
+
+            for (auto& explosion : explosions) {
+                explosion.update(deltaTime);
+            }
+
+            for (auto& explosion : explosions) {
+                if (!explosion.isFinished()) {
+                    explosion.draw(window);
+                }
+            }
+        
+           
