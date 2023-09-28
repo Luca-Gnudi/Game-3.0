@@ -10,8 +10,7 @@ SpaceShip::SpaceShip(const float& scale, const float& speed, sf::Vector2f& Start
 
     spaceShip.setTexture(spaceShipTexture);
     spaceShip.setScale(ShipScale,ShipScale);
-    initialPosition = StartPosition;
-    spaceShip.setPosition(initialPosition);
+    spaceShip.setPosition(StartPosition);
     spaceShip.setOrigin(ShipScale,ShipScale);
     ShipSpeed = speed;
     ShipScale = scale;

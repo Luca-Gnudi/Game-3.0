@@ -128,31 +128,6 @@ int main(){
 		    break;
 	        }
 
-               if((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Enter)) {
-		if(!isPlaying) {
-		    // (re)start the game
-		    isPlaying = true;
-		    clock.restart();
-
-		    // Reset the position of space ship and clear alien objects
-		   //spaceShip.setPosition(spaceShipPosition);
-            humanoids.clear();
-            for (auto i=0; i<5; ++i){
-                auto landWidth = gameWidth * 5;
-                float xPosition = i * landWidth / 5;
-                float yPosition = gameHeight - 150;
-                int direction = (i % 2 == 0) ? 1 : -1; // Alternating direction
-
-                sf::Vector2f startPosition(xPosition, yPosition);
-                Humanoid newHumanoid(startPosition, direction, 1.0);
-                humanoids.push_back(newHumanoid);
-            }
-            landers.clear();
-            explosions.clear();
-            landerShot = 0;
-		}
-	    }
-
 	    // Enter key pressed: play
 	    if((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Enter)) {
 		if(!isPlaying) {
@@ -161,11 +136,10 @@ int main(){
 		    clock.restart();
 
 		    // Reset the position of space ship and clear alien objects
-		    //spaceShip.setPosition(spaceShipPosition);
-            SpaceShip spaceShip(scale, shipSpeed, spaceShipPosition, Background);
             humanoids.clear();
             for (auto i=0; i<5; ++i){
-                float xPosition = i * gameWidth / 5;
+                auto landWidth = gameWidth * 5;
+                float xPosition = i * landWidth / 5;
                 float yPosition = gameHeight - 150;
                 int direction = (i % 2 == 0) ? 1 : -1; // Alternating direction
 
@@ -350,9 +324,9 @@ int main(){
             window.setView(MiniMapView);
 
             window.draw(Background);
-            spaceShip.draw(window);
             CurrentView.setPosition(spaceShip.getPosition().x, gameHeight/2);//Set the position of the highlighted view.
             window.draw(CurrentView);
+            spaceShip.draw(window);
             
 
             for (auto& bullet : bullets) {
