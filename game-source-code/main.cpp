@@ -138,7 +138,8 @@ int main(){
 		   //spaceShip.setPosition(spaceShipPosition);
             humanoids.clear();
             for (auto i=0; i<5; ++i){
-                float xPosition = i * gameWidth / 5;
+                auto landWidth = gameWidth * 5;
+                float xPosition = i * landWidth / 5;
                 float yPosition = gameHeight - 150;
                 int direction = (i % 2 == 0) ? 1 : -1; // Alternating direction
 

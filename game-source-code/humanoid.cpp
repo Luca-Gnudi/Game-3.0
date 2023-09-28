@@ -16,10 +16,10 @@ void Humanoid::updatePosition(){
     if (active) {
         humanoidSprite.move(velocity * direction, 0);
 
-        if (humanoidSprite.getPosition().x < 100){
+        if (humanoidSprite.getPosition().x < 750){
            direction = 1;
         }
-        else if (humanoidSprite.getPosition().x + 60 > 1550){
+        else if (humanoidSprite.getPosition().x + 60 > 5500){
            direction = -1;
         }
 

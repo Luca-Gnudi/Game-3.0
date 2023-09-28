@@ -18,11 +18,12 @@ SpaceShip::SpaceShip(const float& scale, const float& speed, sf::Vector2f& Start
     BackGround = Background;
 
     //Initialise lazerSound to be played when bullets shoot.
-    sf::SoundBuffer LazerSoundBuffer;
-    if(!LazerSoundBuffer.loadFromFile("resources/blaster-2-81267.mp3"))
-	    std::cout << "Cannot load lazer sound file";
-    sf::Sound LazerSound(LazerSoundBuffer);
-}
+    //sf::SoundBuffer LazerSoundBuffer;
+    //if(!LazerSoundBuffer.loadFromFile("resources/blaster-2-81267.mp3"))
+	//    std::cout << "Cannot load lazer sound file";
+    //sf::Sound LazerSound(LazerSoundBuffer);
+} 
+
 
 void SpaceShip::draw(sf::RenderWindow& window){
     window.draw(spaceShip);
