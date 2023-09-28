@@ -8,7 +8,7 @@
 
 class SpaceShip{
 public:
-    SpaceShip(const float& scale, const float& speed, sf::Vector2f& StartPosition, sf::Sprite& Background);
+    SpaceShip(const float& scale, const float& speed, sf::Vector2f& StartPosition);
     void draw(sf::RenderWindow& window);
     sf::Vector2f getPosition() const;
     bool SpaceShipControl(const float& deltaTime, const float& bulletSpeed, const int& gameWidth, const int& gameHeight, std::vector<Bullet>& bullets, sf::View& GameView, sf::RenderWindow& window);
