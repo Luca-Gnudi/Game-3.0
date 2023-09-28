@@ -78,4 +78,26 @@ bool SpaceShip::SpaceShipControl(const float& deltaTime, const float& bulletSpee
 
             }
                 
+            //Shooting lazers.
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+                if (isleft){
+                    Bullet bullet(spaceShip.getPosition(), -1, bulletSpeed);
+                    bullet.setActive(true);
+                    bullets.push_back(bullet);
+                }
+                else {
+                    Bullet bullet(spaceShip.getPosition(), 1, bulletSpeed);
+                    bullet.setActive(true);
+                    bullets.push_back(bullet);
+                }
+                LazerSound.play();
+            }
+
+            return isleft;
             
+}
+
+//Could put inside the draw construstor of the SpaceShip.
+void SpaceShip::GroundDraw(sf::RenderWindow& window){
+    window.draw(BackGround);
+}
