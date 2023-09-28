@@ -380,4 +380,43 @@ int main(){
                 }
             }
         
-           
+           // Call updateMissile to handle missile shooting
+           for (auto& lander : landers){
+            lander.missileShoot(deltaTime, gameWidth, gameHeight, spaceShip.getPosition());
+            // Update and draw the enemy
+            if (isleft){
+                lander.updatePosition(spaceShip.getPosition() + sf::Vector2f(16*scale,0), deltaTime);
+            }
+            else{
+                lander.updatePosition(spaceShip.getPosition() - sf::Vector2f(16*scale,0), deltaTime);
+            }
+
+                lander.updatePosition(spaceShip.getPosition() + sf::Vector2f(16*scale,0), deltaTime);
+                lander.draw(window);
+                lander.missileDraw(window);
+                
+           }
+
+        }
+        else{
+            GameView.setCenter(spaceShip.getPosition().x,gameHeight/2);
+            window.setView(GameView);
+            window.draw(Background);
+            spaceShip.draw(window);
+            // Draw the pause message
+	        //if (SetInstructionPosition){
+                playInstructions.setPosition(spaceShip.getPosition().x - gameWidth/3,gameHeight/4+180);
+                pauseMessage.setPosition(spaceShip.getPosition().x - gameWidth/3, gameHeight/4);
+            //}
+        
+            window.draw(playInstructions);
+            window.draw(pauseMessage);
+        
+        }
+        
+        window.display();
+
+
+}
+ 
+}
