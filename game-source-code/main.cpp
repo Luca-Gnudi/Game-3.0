@@ -198,3 +198,102 @@ int main(){
 
             float y_min = gameHeight*0.15;
             float y_max = gameHeight-300.f;
+
+            // Create the lander and add it to the vector
+            Lander newLander(distance, spaceShip, y_min, y_max);
+            landers.push_back(newLander);
+
+            // Restart the spawn timer with a new random interval
+            spawnInterval = 2.0f + static_cast<float>(std::rand()) / (RAND_MAX / 6.0f);
+            landerSpawnTimer.restart();
+
+            }
+
+
+            if (isleft){
+            spaceShipHitBox.left = spaceShip.getPosition().x + 8*scale;
+            spaceShipHitBox.top = spaceShip.getPosition().y + 10*scale;
+            spaceShipHitBox.width = 14*scale;
+            spaceShipHitBox.height = 10*scale;
+            }
+            else{
+            spaceShipHitBox.left = spaceShip.getPosition().x - 20*scale;
+            spaceShipHitBox.top = spaceShip.getPosition().y + 10*scale;
+            spaceShipHitBox.width = 14*scale;
+            spaceShipHitBox.height = 10*scale;
+            }
+
+            // Check collision with missiles
+            for (auto& lander : landers){
+            for (size_t i = 0; i < lander.missiles.size(); ++i) {
+               if (spaceShipHitBox.intersects(lander.missiles[i].getHitBox())) {
+                  isPlaying = false;
+                  SetInstructionPosition = true;
+                  pauseMessage.setString("Game Over!\nPress Enter to restart or\nescape to exit");
+                  break; // Exit the loop early, as we already detected a collision
+                }
+            }
+            }
+
+            for (auto& lander : landers){
+            sf::FloatRect landerHitBox = lander.getHitBox();
+            if (isCollision(spaceShipHitBox,landerHitBox)){
+                isPlaying = false;
+                SetInstructionPosition = true;
+                pauseMessage.setString("Game Over!\nPress Enter to restart or\nescape to exit");
+            }
+            }
+            // Check collision between bullets and the lander
+              for (auto& lander : landers){
+                for (auto& bullet : bullets) {
+                    if (!bullet.isActive()) continue; // Skip inactive bullets
+
+                    sf::FloatRect bulletHitBox = bullet.getHitBox();
+                    if (lander.getHitBox().intersects(bulletHitBox)) {
+                    // Bullet hit the lander
+                    bullet.setActive(false); // Deactivate the bullet
+                    lander.destroy();
+                    landerShot++;
+   
+                    Explosion newExplosion(lander.getPosition(), 6, 0.005f);
+
+                    // Restart the explosion animation
+                    newExplosion.startAnimation();
+                    explosions.push_back(newExplosion);
+
+                    // Remove destroyed landers from the vector
+                    landers.erase(std::remove_if(landers.begin(), landers.end(),[](const Lander& lander) { return !lander.isActive(); }), landers.end());
+
+                    // Optionally, you can handle other actions when the lander is destroyed
+
+                    break; // Exit the loop early, as we only need to handle one collision
+                    }
+                  
+                  if (landerShot == 10){
+                    isPlaying = false;
+                    pauseMessage.setString("YOU WON!\nNow go get some fresh air!");
+                    playInstructions.setString("Press Esc to exit the game.");
+                    break;
+                  }
+                }
+              }
+        }
+
+        for (auto& bullet : bullets) {
+            bullet.update();
+        }
+
+
+         //rendering
+        window.clear();
+        if(isPlaying){
+            
+            GameView.setCenter(spaceShip.getPosition().x,gameHeight/2);
+
+
+            //Draw objects in the main view.
+            window.setView(GameView);
+            window.draw(Background);
+            spaceShip.draw(window);
+
+            float deltaTime = clock.restart().asSeconds();
