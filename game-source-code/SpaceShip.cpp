@@ -2,7 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics/RenderTarget.hpp>
 
-SpaceShip::SpaceShip(const float& scale, const float& speed, sf::Vector2f& StartPosition){
+SpaceShip::SpaceShip(const float& scale, const float& speed, sf::Vector2f& StartPosition, sf::Sprite& Background){
     //Initialise the lazer sprite.
     if (!spaceShipTexture.loadFromFile("resources/assets/space_ship.png")) {
         std::cout << "Failed to load SpaceShip image";
@@ -14,6 +14,7 @@ SpaceShip::SpaceShip(const float& scale, const float& speed, sf::Vector2f& Start
     spaceShip.setOrigin(ShipScale,ShipScale);
     ShipSpeed = speed;
     ShipScale = scale;
+    BackGround = Background;
 
     //Initialise lazerSound to be played when bullets shoot.
     //sf::SoundBuffer LazerSoundBuffer;

@@ -71,7 +71,7 @@ int main(){
 
     auto landerShot = 0;
 
-    SpaceShip spaceShip(scale, shipSpeed, spaceShipPosition); // Create the spaceShip
+    SpaceShip spaceShip(scale, shipSpeed, spaceShipPosition, Background); // Create the spaceShip
 
     // Load the text font
     sf::Font font;
