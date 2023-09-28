@@ -98,4 +98,103 @@ int main(){
     sf::Clock AITimer;
     const sf::Time AITime = sf::seconds(0.1f);
 
+    sf::Clock clock;
+    auto isPlaying = false;
+    auto SetInstructionPosition = false;
+
+    // Define a vector to store the landers
+    std::vector<Lander> landers;
+    std::vector<Explosion> explosions;
+
+    std::vector<Humanoid> humanoids;
+    // Define a timer for spawning landers
+    sf::Clock landerSpawnTimer;
+    float spawnInterval = 5.0f;
+
+    auto isleft = true;//bool for the direction that the lazer shoots.
     
+    std::vector<Bullet> bullets;
+    auto bulletSpeed = 40.f;
+
+    while (window.isOpen()){
+        
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            // Window closed or escape key pressed: exit
+	        if((event.type == sf::Event::Closed) ||
+	            ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))) {
+		    window.close();
+		    break;
+	        }
+
+               if((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Enter)) {
+		if(!isPlaying) {
+		    // (re)start the game
+		    isPlaying = true;
+		    clock.restart();
+
+		    // Reset the position of space ship and clear alien objects
+		   //spaceShip.setPosition(spaceShipPosition);
+            humanoids.clear();
+            for (auto i=0; i<5; ++i){
+                float xPosition = i * gameWidth / 5;
+                float yPosition = gameHeight - 150;
+                int direction = (i % 2 == 0) ? 1 : -1; // Alternating direction
+
+                sf::Vector2f startPosition(xPosition, yPosition);
+                Humanoid newHumanoid(startPosition, direction, 1.0);
+                humanoids.push_back(newHumanoid);
+            }
+            landers.clear();
+            explosions.clear();
+            landerShot = 0;
+		}
+	    }
+
+	    // Enter key pressed: play
+	    if((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Enter)) {
+		if(!isPlaying) {
+		    // (re)start the game
+		    isPlaying = true;
+		    clock.restart();
+
+		    // Reset the position of space ship and clear alien objects
+		    //spaceShip.setPosition(spaceShipPosition);
+            SpaceShip spaceShip(scale, shipSpeed, spaceShipPosition, Background);
+            humanoids.clear();
+            for (auto i=0; i<5; ++i){
+                float xPosition = i * gameWidth / 5;
+                float yPosition = gameHeight - 150;
+                int direction = (i % 2 == 0) ? 1 : -1; // Alternating direction
+
+                sf::Vector2f startPosition(xPosition, yPosition);
+                Humanoid newHumanoid(startPosition, direction, 1.0);
+                humanoids.push_back(newHumanoid);
+            }
+            landers.clear();
+            explosions.clear();
+            landerShot = 0;
+		}
+	    }
+	}
+       if (isPlaying) {
+            float deltaTime = clock.restart().asSeconds();
+            isleft = spaceShip.SpaceShipControl(deltaTime, bulletSpeed, gameWidth, gameHeight, bullets, GameView, window);
+
+
+            
+            // Check if it's time to spawn a new lander
+            if (landerSpawnTimer.getElapsedTime().asSeconds() >= spawnInterval) {
+            // Create a new lander at a random position around the spaceship
+            //sf::Vector2f randomOffset;
+            float distance = 600.0f; // Adjust the distance from the spaceship
+            // float angle = static_cast<float>(std::rand() % 360); // Random angle in degrees
+            // randomOffset.x = std::cos(angle * 3.14159265f / 180) * distance;
+            // randomOffset.y = std::sin(angle * 3.14159265f / 180) * distance;
+            
+            // // Calculate the lander's position relative to the spaceship
+            //sf::Vector2f landerPosition //= spaceShip.getPosition() + randomOffset;
+
+            float y_min = gameHeight*0.15;
+            float y_max = gameHeight-300.f;
