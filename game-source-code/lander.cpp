@@ -7,8 +7,10 @@
 #include <vector>
 #include "missile.h"
 #include "explosion.h"
+#include "humanoid.h"
 
-Lander::Lander(const float& distance, SpaceShip& spaceShip, const float& y_min, const float& y_max) : destroyed(false), explosion(landerPosition, 6, 0.1f) {
+Lander::Lander(const float& distance, SpaceShip& spaceShip, const float& y_min, const float& y_max) 
+: Entity(sf::Vector2f(0.f, 0.f)), destroyed(false), explosion(landerPosition, 6, 0.1f) {
     landerTexture = new sf::Texture;
     if (!landerTexture->loadFromFile("resources/assets/lander.png")) {
         std::cout << "Could not load lander image file";
@@ -144,4 +146,14 @@ bool Lander::isDestroyed() const {
 
 bool Lander::isActive() const {
     return !destroyed;
+}
+
+void Lander::handleCollision(Entity& otherEntity) {
+    // Check if the other entity is a humanoid
+    Humanoid* humanoid = dynamic_cast<Humanoid*>(&otherEntity);
+    if (humanoid) {
+        // Pick up the humanoid and move up together
+        moveUp(100.0f); // Adjust the distance as needed
+        humanoid->setActive(false); // Deactivate the humanoid
+    }
 }

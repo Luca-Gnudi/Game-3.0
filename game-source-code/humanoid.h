@@ -7,8 +7,9 @@
  */
 
 #include <SFML/Graphics.hpp>
+#include "Entity.h"
 
-class Humanoid {
+class Humanoid : public Entity {
 public:
     Humanoid(sf::Vector2f, int dir, float velocity);
     sf::FloatRect getHitBox();

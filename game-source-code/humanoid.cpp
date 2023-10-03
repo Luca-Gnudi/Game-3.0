@@ -2,7 +2,7 @@
 #include <iostream>
 
 Humanoid::Humanoid( sf::Vector2f startPosition, int dir, float velocity)  
-    : velocity(velocity), direction(dir), active(true){
+    : Entity(startPosition), velocity(velocity), direction(dir), active(true){
     humanoidTexture = new sf::Texture;
     if (!humanoidTexture->loadFromFile("resources/assets/Humanoid.png")) {
         std::cout << "Could not load lander image file";

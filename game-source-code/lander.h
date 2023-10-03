@@ -11,8 +11,9 @@
 #include "missile.h"
 #include "explosion.h"
 #include "SpaceShip.h"
+#include "Entity.h"
 
-class Lander {
+class Lander : public Entity {
 public:
 
     Lander(const float& distance, SpaceShip& spaceShip, const float& bound_x, const float& bound_y); // Constructor
@@ -31,6 +32,8 @@ public:
     void destroy();
     bool isDestroyed() const;
     bool isActive() const;
+
+    void handleCollision(Entity& otherEntity) override;
     
 private:
     sf::Sprite landerSprite;
