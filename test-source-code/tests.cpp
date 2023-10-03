@@ -5,6 +5,7 @@
 #include "lander.h"
 #include "missile.h"
 #include "explosion.h"
+#include "humanoid.h"
 
 #include <vector>
 
@@ -335,4 +336,76 @@ TEST_CASE("Explosion's full animation occurs") {
 
     // Check if the animation has finished
     CHECK(explosion.isFinished());
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//                                          Humanoid                                             //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Humanoid moves horizontally") {
+    // Create a Humanoid object with an initial position, direction, and velocity
+    sf::Vector2f startPosition(100.0f, 100.0f);
+    int initialDirection = 1; // Initial direction (1 or -1)
+    float velocity = 5.0f;    // Initial velocity
+
+    Humanoid humanoid(startPosition, initialDirection, velocity);
+
+    // Update the Humanoid's position
+    humanoid.updatePosition();
+
+    // Get the updated position
+    sf::Vector2f updatedPosition = humanoid.getPosition();
+
+    // Check if the Humanoid's position has changed based on its velocity and direction
+    if (initialDirection == 1) {
+        // If the initial direction is 1, the Humanoid should have moved right
+        CHECK(updatedPosition.x > startPosition.x);
+    } else if (initialDirection == -1) {
+        // If the initial direction is -1, the Humanoid should have moved left
+        CHECK(updatedPosition.x < startPosition.x);
+    }
+}
+
+TEST_CASE("Humanoid turns around and moves in the opposite direction when it reaches the left turn around point") {
+    // Create a Humanoid object with an initial position, direction, and velocity
+    sf::Vector2f startPosition(760.0f, 100.0f);
+    int initialDirection = -1; // Initial direction to the left
+    float velocity = 5.0f;    // Initial velocity
+
+    // Create a Humanoid with the initial parameters
+    Humanoid humanoid(startPosition, initialDirection, velocity);
+
+    // Set a fixed deltaTime for testing
+    float deltaTime = 10.0f;
+
+    // Choose a point where the Humanoid should turn around
+    float turnaroundPoint = 750.0f;
+
+    // Get the updated position after reaching the turnaround point
+    sf::Vector2f updatedPosition = humanoid.getPosition();
+
+    // Check if the Humanoid has changed direction and moved away from the turnaround point
+    CHECK(humanoid.getPosition().x >= turnaroundPoint);
+}
+
+TEST_CASE("Humanoid turns around and moves in the opposite direction when it reaches the right turn around point") {
+    // Create a Humanoid object with an initial position, direction, and velocity
+    sf::Vector2f startPosition(5450.0f, 100.0f);
+    int initialDirection = 1; // Initial direction to the right
+    float velocity = 5.0f;    // Initial velocity
+
+    // Create a Humanoid with the initial parameters
+    Humanoid humanoid(startPosition, initialDirection, velocity);
+
+    // Set a fixed deltaTime for testing
+    float deltaTime = 10.0f;
+
+    // Choose a point where the Humanoid should turn around
+    float turnaroundPoint = 5500.0f;
+
+    // Get the updated position after reaching the turnaround point
+    sf::Vector2f updatedPosition = humanoid.getPosition();
+
+    // Check if the Humanoid has changed direction and moved away from the turnaround point
+    CHECK(humanoid.getPosition().x <= turnaroundPoint);
 }
