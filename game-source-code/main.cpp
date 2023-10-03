@@ -1,13 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include "Bullet.h"
-#include "lander.h"
-#include "explosion.h"
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include "Bullet.h"
 #include "lander.h"
 #include "SpaceShip.h"
+#include "humanoid.h"
 
 // Collision detection logic
 bool isCollision(const sf::FloatRect &rect1, const sf::FloatRect &rect2)
@@ -108,6 +106,8 @@ int main()
     std::vector<Lander> landers;
     std::vector<Explosion> explosions;
 
+    std::vector<Humanoid> humanoids;
+
     // Define a timer for spawning landers
     sf::Clock landerSpawnTimer;
     float spawnInterval = 5.0f;
@@ -144,6 +144,17 @@ int main()
 
                     // Reset the position of space ship and clear alien objects
                     SpaceShip spaceShip(scale, shipSpeed, spaceShipPosition, Background);
+                     humanoids.clear();
+                     for (auto i=0; i<5; ++i){
+                        auto landWidth = gameWidth * 5;
+                        float xPosition = i * landWidth / 5;
+                        float yPosition = gameHeight - 150;
+                        int direction = (i % 2 == 0) ? 1 : -1; // Alternating direction
+
+                        sf::Vector2f startPosition(xPosition, yPosition);
+                        Humanoid newHumanoid(startPosition, direction, 1.0);
+                        humanoids.push_back(newHumanoid);
+                    }
                     landers.clear();
                     explosions.clear();
                     landerShot = 0;
@@ -310,6 +321,14 @@ int main()
                 bullet.draw(window);
             }
 
+            for (auto& humanoid : humanoids){
+                humanoid.updatePosition();
+            }
+
+            for (auto& humanoid : humanoids) {
+                humanoid.draw(window);
+            }
+
             for (auto &explosion : explosions)
             {
                 explosion.update(deltaTime);
@@ -354,6 +373,14 @@ int main()
             for (auto &bullet : bullets)
             {
                 bullet.draw(window);
+            }
+
+            for (auto& humanoid : humanoids){
+                humanoid.updatePosition();
+            }
+
+            for (auto& humanoid : humanoids) {
+                humanoid.draw(window);
             }
 
             for (auto &explosion : explosions)
