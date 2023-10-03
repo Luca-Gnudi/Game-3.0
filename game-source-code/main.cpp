@@ -348,15 +348,7 @@ int main()
                 auto landWidth = gameWidth * 5;
                 lander.missileShoot(deltaTime, landWidth, gameHeight, spaceShip.getPosition());
                 // Update and draw the enemy
-                if (isleft)
-                {
-                    lander.updatePosition(spaceShip.getPosition() + sf::Vector2f(8 * scale, 0), deltaTime);
-                }
-                else
-                {
-                    lander.updatePosition(spaceShip.getPosition() - sf::Vector2f(16 * scale, 0), deltaTime);
-                }
-
+                lander.updatePosition(humanoids, deltaTime);
                 lander.draw(window);
                 lander.missileDraw(window);
             }
@@ -402,14 +394,7 @@ int main()
                 auto landWidth = gameWidth * 5;
                 lander.missileShoot(deltaTime, landWidth, gameHeight, spaceShip.getPosition());
                 // Update and draw the enemy
-                if (isleft)
-                {
-                    lander.updatePosition(spaceShip.getPosition() + sf::Vector2f(8 * scale, 0), deltaTime);
-                }
-                else
-                {
-                    lander.updatePosition(spaceShip.getPosition() - sf::Vector2f(16 * scale, 0), deltaTime);
-                }
+                lander.updatePosition(humanoids,deltaTime);
 
                 lander.draw(window);
                 lander.missileDraw(window);

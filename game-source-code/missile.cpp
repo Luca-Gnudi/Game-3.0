@@ -11,7 +11,7 @@ Missile::Missile(sf::Vector2f position, sf::Vector2f targetPosition) {
     missileSprite.setTexture(*missileTexture);
     missileSprite.setScale(2.0f, 2.0f);
     missileSprite.setPosition(position);
-    speed = 20000.0f; // Adjust the speed as needed
+    speed = 10000.0f; // Adjust the speed as needed
   
      // Calculate the direction vector towards the target (space ship)
     missileDirection = targetPosition - position;

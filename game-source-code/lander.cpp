@@ -41,19 +41,38 @@ Lander::Lander(const float& distance, SpaceShip& spaceShip, const float& y_min, 
     randomDelay = minDelay + static_cast<float>(std::rand()) / (RAND_MAX / (maxDelay - minDelay));
 }
 
-void Lander::updatePosition(sf::Vector2f spaceshipPosition, float deltaTime) {
-     // Calculate the direction vector from lander to spaceship
-    sf::Vector2f direction = spaceshipPosition - landerSprite.getPosition();
-    // Normalize the direction vector (make it a unit vector)
-    float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-    if (length != 0) {
-        direction /= length;
-    }
-    // Set the speed at which the lander moves
-    float moveSpeed = 5000.0f; // Adjust the speed as needed
+void Lander::updatePosition(std::vector<Humanoid>& humanoids, float deltaTime) {
+    // Check if there are any active humanoids
+    bool foundHumanoid = false;
+    sf::Vector2f closestHumanoidPosition;
+    float closestHumanoidDistance = std::numeric_limits<float>::max();
 
-    // Update the lander's position based on the direction and speed
-    landerSprite.move(direction * moveSpeed * deltaTime);
+    for (const Humanoid& humanoid : humanoids) {
+        if (humanoid.isActive()) {
+            // Calculate the direction vector from the lander to the humanoid
+            sf::Vector2f direction = humanoid.getPosition() - landerSprite.getPosition();
+            float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+
+            if (distance < closestHumanoidDistance) {
+                closestHumanoidDistance = distance;
+                closestHumanoidPosition = humanoid.getPosition();
+                foundHumanoid = true;
+            }
+        }
+    }
+
+    // If an active humanoid is found, move towards it
+    if (foundHumanoid) {
+        sf::Vector2f direction = closestHumanoidPosition - landerSprite.getPosition();
+        float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+        
+        if (length != 0) {
+            direction /= length;
+        }
+        
+        float moveSpeed = 1000.0f; // Adjust the speed as needed
+        landerSprite.move(direction * moveSpeed * deltaTime);
+    }
 }
 
 sf::Vector2f Lander::getPosition() const {
@@ -87,18 +106,6 @@ void Lander::draw(sf::RenderWindow& window) {
         }
     }
 }
-
-// sf::Vector2f Lander::Spawn(const float& distance, sf::Sprite& spaceShip){
-//     sf::Vector2f randomOffset;
-//     float angle = static_cast<float>(std::rand() % 360); // Random angle in degrees
-//     randomOffset.x = std::cos(angle * 3.14159265f / 180) * distance;
-//     randomOffset.y = std::sin(angle * 3.14159265f / 180) * distance;
-
-//     // Calculate the lander's position relative to the spaceship
-//     sf::Vector2f landerPosition = spaceShip.getPosition() + randomOffset;
-
-//     return landerPosition;
-// }
 
 void Lander::missileCreate(sf::Vector2f spaceshipPosition) {
     Missile missile(landerSprite.getPosition(), spaceshipPosition);

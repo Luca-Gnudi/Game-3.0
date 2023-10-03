@@ -12,18 +12,19 @@
 #include "explosion.h"
 #include "SpaceShip.h"
 #include "Entity.h"
+#include "humanoid.h"
 
 class Lander : public Entity {
 public:
 
     Lander(const float& distance, SpaceShip& spaceShip, const float& bound_x, const float& bound_y); // Constructor
     sf::FloatRect getHitBox();
-    void updatePosition(sf::Vector2f spaceshipPosition, float deltaTime);
+    void updatePosition(std::vector<Humanoid>& humanoids, float deltaTime);
     void draw(sf::RenderWindow& window);
     sf::Vector2f getPosition() const;
 
     std::vector<Missile> missiles;
-    
+
     void missileCreate(sf::Vector2f spaceshipPosition);
     void missileUpdate(float deltaTime, int gameWidth, int gameHeight);
     void missileShoot(float deltaTime, int gameWidth, int gameHeight, sf::Vector2f spaceshipPosition);
