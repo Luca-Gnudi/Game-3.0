@@ -1,22 +1,38 @@
 #include "lander.h"
 #include <SFML/Graphics.hpp>
+#include "lander.h"
+#include <SFML/Graphics.hpp>
 #include <iostream>
 #include <math.h>
 #include <vector>
 #include "missile.h"
+#include "explosion.h"
 
-Lander::Lander(sf::Vector2f startPosition) {
-    if (!landerTexture.loadFromFile("resources/assets/lander.png")) {
+Lander::Lander(const float& distance, SpaceShip& spaceShip, const float& y_min, const float& y_max) : destroyed(false), explosion(landerPosition, 6, 0.1f) {
+    landerTexture = new sf::Texture;
+    if (!landerTexture->loadFromFile("resources/assets/lander.png")) {
         std::cout << "Could not load lander image file";
     }
-    landerSprite.setTexture(landerTexture);
-    landerSprite.setScale(5.5f, 5.5f); // Adjust the scale as needed
-    landerSprite.setPosition(startPosition);
+    landerSprite.setTexture(*landerTexture);
+    landerSprite.setScale(2.5f, 2.5f); // Adjust the scale as needed
+
+    //landerPosition = sf::Vector2f(1700.f,1000.f);
+
+   // while ((landerPosition.y > y_min) && (landerPosition.y < y_max)){
+        sf::Vector2f randomOffset;
+        float angle = static_cast<float>(std::rand() % 360); // Random angle in degrees
+        randomOffset.x = std::cos(angle * 3.14159265f / 180) * distance;
+        randomOffset.y = std::sin(angle * 3.14159265f / 180) * distance;
+
+        // Calculate the lander's position relative to the spaceship
+        sf::Vector2f landerPosition = spaceShip.getPosition() + randomOffset;
+
+   // }
+    landerSprite.setPosition(landerPosition);
     speed = 200.0f; // Adjust the speed as needed
 
     // Initialize the missiles vector
     missiles = std::vector<Missile>();
-
     missileTimer.restart(); // Start the timer
     minDelay = 3.0f; // Minimum delay in seconds
     maxDelay = 10.0f; // Maximum delay in seconds
@@ -26,15 +42,13 @@ Lander::Lander(sf::Vector2f startPosition) {
 void Lander::updatePosition(sf::Vector2f spaceshipPosition, float deltaTime) {
      // Calculate the direction vector from lander to spaceship
     sf::Vector2f direction = spaceshipPosition - landerSprite.getPosition();
-
     // Normalize the direction vector (make it a unit vector)
     float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
     if (length != 0) {
         direction /= length;
     }
-
     // Set the speed at which the lander moves
-    float moveSpeed = 10000.0f; // Adjust the speed as needed
+    float moveSpeed = 5000.0f; // Adjust the speed as needed
 
     // Update the lander's position based on the direction and speed
     landerSprite.move(direction * moveSpeed * deltaTime);
@@ -45,12 +59,44 @@ sf::Vector2f Lander::getPosition() const {
 }
 
 sf::FloatRect Lander::getHitBox() {
-        return landerSprite.getGlobalBounds();
+    sf::FloatRect landerHitBox;
+    auto scale = 2.5f;
+
+    landerHitBox.left = landerSprite.getPosition().x + 5*scale;
+    landerHitBox.top = landerSprite.getPosition().y + 7*scale;
+    landerHitBox.width = 24*scale;
+    landerHitBox.height = 22*scale;
+
+    return landerHitBox;
 }
 
 void Lander::draw(sf::RenderWindow& window) {
-    window.draw(landerSprite);
+
+    if (!destroyed){
+       window.draw(landerSprite);
+    }
+    else {
+        // Draw explosion animation
+        explosion.draw(window);
+
+        // Check if the explosion animation has finished, and perform any cleanup
+        if (explosion.isFinished()) {
+            // Remove the lander or perform other cleanup actions as needed
+        }
+    }
 }
+
+// sf::Vector2f Lander::Spawn(const float& distance, sf::Sprite& spaceShip){
+//     sf::Vector2f randomOffset;
+//     float angle = static_cast<float>(std::rand() % 360); // Random angle in degrees
+//     randomOffset.x = std::cos(angle * 3.14159265f / 180) * distance;
+//     randomOffset.y = std::sin(angle * 3.14159265f / 180) * distance;
+
+//     // Calculate the lander's position relative to the spaceship
+//     sf::Vector2f landerPosition = spaceShip.getPosition() + randomOffset;
+
+//     return landerPosition;
+// }
 
 void Lander::missileCreate(sf::Vector2f spaceshipPosition) {
     Missile missile(landerSprite.getPosition(), spaceshipPosition);
@@ -59,16 +105,13 @@ void Lander::missileCreate(sf::Vector2f spaceshipPosition) {
 
 void Lander::missileShoot(float deltaTime, int gameWidth, int gameHeight, sf::Vector2f spaceshipPosition ) {
    if (missileTimer.getElapsedTime().asSeconds() >= randomDelay) {
-
         // Create a missile with the calculated direction
         Missile missile(landerSprite.getPosition(), spaceshipPosition);
         missiles.push_back(missile);
-
         missileTimer.restart(); // Reset the timer
         // Generate a new random shooting delay
         randomDelay = minDelay + static_cast<float>(std::rand()) / (RAND_MAX / (maxDelay - minDelay));
     }
-
     // Update existing missiles
     missileUpdate(deltaTime, gameWidth, gameHeight);
 }
@@ -82,10 +125,23 @@ void Lander::missileUpdate(float deltaTime, int gameWidth, int gameHeight) {
             --i;
         }
     }
-}
-
+}  
 void Lander::missileDraw(sf::RenderWindow& window) {
     for (Missile& missile : missiles) {
         missile.draw(window);
     }
+}
+
+void Lander::destroy() {
+    destroyed = true;
+    explosion.setPosition(landerSprite.getPosition());
+    explosion.startAnimation();
+}
+
+bool Lander::isDestroyed() const {
+    return destroyed;
+}
+
+bool Lander::isActive() const {
+    return !destroyed;
 }

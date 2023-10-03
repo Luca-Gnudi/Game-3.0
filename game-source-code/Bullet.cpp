@@ -1,12 +1,14 @@
 #include "Bullet.h"
 
-#include "Bullet.h"
-
 Bullet::Bullet(  sf::Vector2f position, int dir, float velocity)
     : velocity(velocity), direction(dir), active(false) {
-    shape.setSize(sf::Vector2f(20, 5));
-    shape.setPosition(position-sf::Vector2f(0,-51));
+    shape.setSize(sf::Vector2f(10, 2));
+    shape.setPosition(position-sf::Vector2f(0,-37));
     shape.setFillColor(sf::Color::Green);
+}
+
+sf::FloatRect Bullet::getHitBox() {
+    return shape.getGlobalBounds();
 }
 
 void Bullet::update() {

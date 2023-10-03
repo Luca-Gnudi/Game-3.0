@@ -9,13 +9,12 @@ Missile::Missile(sf::Vector2f position, sf::Vector2f targetPosition) {
         std::cout << "Could not load missile image file" << std::endl;
     }
     missileSprite.setTexture(*missileTexture);
-    missileSprite.setScale(5.0f, 5.0f);
+    missileSprite.setScale(2.0f, 2.0f);
     missileSprite.setPosition(position);
     speed = 20000.0f; // Adjust the speed as needed
-
+  
      // Calculate the direction vector towards the target (space ship)
     missileDirection = targetPosition - position;
-
     // Normalize the direction vector (make it a unit vector)
     float length = std::sqrt(missileDirection.x * missileDirection.x + missileDirection.y * missileDirection.y);
     if (length != 0) {
@@ -24,7 +23,14 @@ Missile::Missile(sf::Vector2f position, sf::Vector2f targetPosition) {
 }
 
 sf::FloatRect Missile::getHitBox() {
-    return missileSprite.getGlobalBounds();
+    sf::FloatRect missileHitBox;
+    auto scale = 2.0f;
+
+    missileHitBox.left = missileSprite.getPosition().x + 12*scale;
+    missileHitBox.top = missileSprite.getPosition().y + 14*scale;
+    missileHitBox.width = 9*scale;
+    missileHitBox.height = 9*scale;
+    return missileHitBox;
 }
 
 void Missile::updatePosition(float deltaTime) {
