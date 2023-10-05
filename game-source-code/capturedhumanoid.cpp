@@ -25,9 +25,7 @@ sf::FloatRect CapturedHumanoid::getHitBox() {
 }
 
 void CapturedHumanoid::draw(sf::RenderWindow& window) {
-    if (active) {
-        window.draw(capturedhumanoidSprite);
-    }
+    window.draw(capturedhumanoidSprite);
 }
 
 void CapturedHumanoid::setActive(bool isActive) {

@@ -302,10 +302,6 @@ int main(){
             }
               
         }
-
-        for (auto& bullet : bullets) {
-            bullet.update();
-        }
        
          //rendering
         window.clear();
@@ -316,15 +312,28 @@ int main(){
             Bullet::removeInactiveBullets(bullets);
             window.draw(spaceShip);
 
-            for (auto& humanoid : humanoids){
-                humanoid.updatePosition();
-            }
+            // Call updateMissile to handle missile shooting
+           for (auto& lander : landers){
+            lander.missileShoot(deltaTime, gameWidth, gameHeight, spaceShip.getPosition());
+            // Update and draw the enemy
+                lander.updatePosition(humanoids, deltaTime);
+                lander.draw(window);
+                lander.missileDraw(window);
 
-            for (auto& humanoid : humanoids) {
-                humanoid.draw(window);
-            }
+                // Draw captured humanoids
+                if (lander.isCarryingHumanoid) {
+                CapturedHumanoid capturedHumanoid;
+                sf::Vector2f capturedHumanoidOffset;
+                capturedHumanoidOffset = sf::Vector2f(0.0f, 50);
+                capturedHumanoid.setPosition(lander.getPosition() + capturedHumanoidOffset);
+                capturedHumanoid.updatePosition(deltaTime);
+                capturedHumanoid.draw(window);
+                }
+                
+           }
 
             for (auto& bullet : bullets) {
+                bullet.update();
                 bullet.draw(window);
             }
 
@@ -337,24 +346,14 @@ int main(){
                     explosion.draw(window);
                 }
             }
-        
-           // Call updateMissile to handle missile shooting
-           for (auto& lander : landers){
-            lander.missileShoot(deltaTime, gameWidth, gameHeight, spaceShip.getPosition());
-            // Update and draw the enemy
-                lander.updatePosition(humanoids, deltaTime);
-                lander.draw(window);
-                lander.missileDraw(window);
 
-                // Draw captured humanoids
-                if (lander.isCarryingHumanoid) {
-                CapturedHumanoid capturedHumanoid;
-                capturedHumanoid.setPosition(lander.getPosition());
-                capturedHumanoid.updatePosition(deltaTime);
-                capturedHumanoid.draw(window);
-                }
-                
-           }
+            for (auto& humanoid : humanoids){
+                humanoid.updatePosition();
+            }
+
+            for (auto& humanoid : humanoids) {
+                humanoid.draw(window);
+            }
         }
         else{
             // Draw the pause message
