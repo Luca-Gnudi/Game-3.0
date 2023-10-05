@@ -175,7 +175,7 @@ int main(){
             float y_max = gameHeight-300.f;
 
             // Create the lander and add it to the vector
-            Lander newLander(distance, spaceShip, y_min, y_max);
+            Lander newLander;
             landers.push_back(newLander);
 
             // Restart the spawn timer with a new random interval

@@ -11,11 +11,12 @@
 #include "missile.h"
 #include "explosion.h"
 #include "SpaceShip.h"
+#include "CapturedHumanoid.h"
 
 class Lander {
 public:
 
-    Lander(const float& distance, SpaceShip& spaceShip, const float& bound_x, const float& bound_y); // Constructor
+    Lander(); // Constructor
     sf::FloatRect getHitBox();
     void updatePosition(sf::Vector2f spaceshipPosition, float deltaTime);
     void draw(sf::RenderWindow& window);
@@ -31,6 +32,11 @@ public:
     void destroy();
     bool isDestroyed() const;
     bool isActive() const;
+
+    void captureHumanoid(const Humanoid& humanoid);
+    void moveWithHumanoid(float deltaTime);
+
+    bool isCarryingHumanoid;
     
 private:
     sf::Sprite landerSprite;
@@ -45,6 +51,9 @@ private:
 
     bool destroyed;
     Explosion explosion;
+
+    sf::Vector2f capturedHumanoidPosition;
+    CapturedHumanoid capturedHumanoid;
 };
 
 #endif

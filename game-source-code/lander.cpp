@@ -6,7 +6,8 @@
 #include "missile.h"
 #include "explosion.h"
 
-Lander::Lander(const float& distance, SpaceShip& spaceShip, const float& y_min, const float& y_max) : destroyed(false), explosion(landerPosition, 6, 0.1f) {
+Lander::Lander() 
+: destroyed(false), explosion(landerPosition, 6, 0.1f), isCarryingHumanoid(false) {
     landerTexture = new sf::Texture;
     if (!landerTexture->loadFromFile("resources/assets/lander.png")) {
         std::cout << "Could not load lander image file";
@@ -14,18 +15,7 @@ Lander::Lander(const float& distance, SpaceShip& spaceShip, const float& y_min, 
     landerSprite.setTexture(*landerTexture);
     landerSprite.setScale(2.5f, 2.5f); // Adjust the scale as needed
 
-    //landerPosition = sf::Vector2f(1700.f,1000.f);
-
-   // while ((landerPosition.y > y_min) && (landerPosition.y < y_max)){
-        sf::Vector2f randomOffset;
-        float angle = static_cast<float>(std::rand() % 360); // Random angle in degrees
-        randomOffset.x = std::cos(angle * 3.14159265f / 180) * distance;
-        randomOffset.y = std::sin(angle * 3.14159265f / 180) * distance;
-
-        // Calculate the lander's position relative to the spaceship
-        sf::Vector2f landerPosition = spaceShip.getPosition() + randomOffset;
-
-   // }
+    landerPosition = sf::Vector2f(rand()%6700, rand()%600);
     landerSprite.setPosition(landerPosition);
     speed = 200.0f; // Adjust the speed as needed
 
@@ -87,18 +77,6 @@ void Lander::draw(sf::RenderWindow& window) {
     }
 }
 
-// sf::Vector2f Lander::Spawn(const float& distance, sf::Sprite& spaceShip){
-//     sf::Vector2f randomOffset;
-//     float angle = static_cast<float>(std::rand() % 360); // Random angle in degrees
-//     randomOffset.x = std::cos(angle * 3.14159265f / 180) * distance;
-//     randomOffset.y = std::sin(angle * 3.14159265f / 180) * distance;
-
-//     // Calculate the lander's position relative to the spaceship
-//     sf::Vector2f landerPosition = spaceShip.getPosition() + randomOffset;
-
-//     return landerPosition;
-// }
-
 void Lander::missileCreate(sf::Vector2f spaceshipPosition) {
     Missile missile(landerSprite.getPosition(), spaceshipPosition);
     missiles.push_back(missile);
@@ -149,4 +127,24 @@ bool Lander::isDestroyed() const {
 
 bool Lander::isActive() const {
     return !destroyed;
+}
+
+void Lander::captureHumanoid(const Humanoid& humanoid) {
+    if (!isCarryingHumanoid) {
+        isCarryingHumanoid = true;
+        capturedHumanoidPosition = humanoid.getPosition();
+    }
+}
+
+void Lander::moveWithHumanoid(float deltaTime) {
+    if (isCarryingHumanoid) {
+        // Move the lander straight up
+        float moveSpeed = 200.0f; // Adjust the speed as needed
+        landerSprite.move(0.0f, -moveSpeed * deltaTime);
+
+        // Check if the lander is offscreen at the top and release the humanoid
+        if (landerSprite.getPosition().y < 0) {
+            isCarryingHumanoid = false;
+        }
+    }
 }
