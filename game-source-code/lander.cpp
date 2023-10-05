@@ -26,11 +26,28 @@ Lander::Lander()
     minDelay = 3.0f; // Minimum delay in seconds
     maxDelay = 10.0f; // Maximum delay in seconds
     randomDelay = minDelay + static_cast<float>(std::rand()) / (RAND_MAX / (maxDelay - minDelay));
+
+    capturedHumanoid.setActive(false);
 }
 
-void Lander::updatePosition(sf::Vector2f spaceshipPosition, float deltaTime) {
-     // Calculate the direction vector from lander to spaceship
-    sf::Vector2f direction = spaceshipPosition - landerSprite.getPosition();
+void Lander::updatePosition(const std::vector<Humanoid>& humanoids, float deltaTime) {
+    if (!isCarryingHumanoid){
+     // Choose the humanoid to chase (for example, the closest humanoid)
+    sf::Vector2f closestHumanoidPosition;
+    float closestHumanoidDistance = std::numeric_limits<float>::max();
+
+    for (const Humanoid& humanoid : humanoids) {
+        sf::Vector2f direction = humanoid.getPosition() - landerSprite.getPosition();
+        float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+
+        if (distance < closestHumanoidDistance) {
+            closestHumanoidDistance = distance;
+            closestHumanoidPosition = humanoid.getPosition();
+        }
+    }
+
+    // Calculate the direction vector from lander to the chosen humanoid
+    sf::Vector2f direction = closestHumanoidPosition - landerSprite.getPosition();
 
     // Normalize the direction vector (make it a unit vector)
     float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
@@ -39,11 +56,25 @@ void Lander::updatePosition(sf::Vector2f spaceshipPosition, float deltaTime) {
     }
 
     // Set the speed at which the lander moves
-    float moveSpeed = 5000.0f; // Adjust the speed as needed
+    float moveSpeed = 2500.0f; // Adjust the speed as needed
 
     // Update the lander's position based on the direction and speed
     landerSprite.move(direction * moveSpeed * deltaTime);
+  } else {
+        // The lander's behavior when carrying a humanoid
+        float moveSpeed = 100.0f; // Adjust the upward speed as needed
+        landerSprite.move(0.0f, -moveSpeed * deltaTime);
+
+        // Move the captured humanoid along with the lander
+        capturedHumanoidPosition.y -= moveSpeed * deltaTime;
+
+        // Check if the lander is offscreen at the top and release the humanoid
+        if (landerSprite.getPosition().y < 0) {
+            isCarryingHumanoid = false;
+        }
+    }
 }
+
 
 sf::Vector2f Lander::getPosition() const {
     return landerSprite.getPosition();
@@ -51,7 +82,7 @@ sf::Vector2f Lander::getPosition() const {
 
 sf::FloatRect Lander::getHitBox() {
     sf::FloatRect landerHitBox;
-    auto scale = 5.5f;
+    auto scale = 2.5f;
 
     landerHitBox.left = landerSprite.getPosition().x + 5*scale;
     landerHitBox.top = landerSprite.getPosition().y + 7*scale;

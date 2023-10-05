@@ -144,7 +144,7 @@ int main(){
                 int direction = (i % 2 == 0) ? 1 : -1; // Alternating direction
 
                 sf::Vector2f startPosition(xPosition, yPosition);
-                Humanoid newHumanoid(startPosition, direction, 1.0);
+                Humanoid newHumanoid(startPosition, direction, 0.5);
                 humanoids.push_back(newHumanoid);
             }
             landers.clear();
@@ -252,6 +252,37 @@ int main(){
                   }
                 }
               }
+              for (Lander& lander : landers) {
+                for (Humanoid& humanoid : humanoids) {
+                    sf::Vector2f direction = humanoid.getPosition() - lander.getPosition();
+                    float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+
+                    // Adjust the distance threshold as needed
+                    if (lander.getHitBox().intersects(humanoid.getHitBox())) {
+                    lander.captureHumanoid(humanoid);
+                    // Remove the captured humanoid from the vector
+                    humanoids.erase(std::remove_if(humanoids.begin(), humanoids.end(),
+                    [&humanoid](const Humanoid& h) { return &h == &humanoid; }),
+                    humanoids.end());
+                    }
+                }
+                if (humanoids.empty()){
+                    isPlaying = false;
+                    pauseMessage.setString("Game Over!\nAll astronauts captured!");
+                    break;
+                }
+            }
+            for (Lander& lander : landers) {
+                if (lander.isCarryingHumanoid) {
+                    lander.moveWithHumanoid(deltaTime);
+
+                    // Check if the lander is offscreen at the top and release the humanoid
+                    if (lander.getPosition().y < 10 ) {
+                    lander.isCarryingHumanoid = false;
+                    // You can perform additional actions here, e.g., award points
+                    }
+                }
+            }
         }
 
         for (auto& bullet : bullets) {
@@ -305,16 +336,19 @@ int main(){
            for (auto& lander : landers){
             lander.missileShoot(deltaTime, gameWidth, gameHeight, spaceShip.getPosition());
             // Update and draw the enemy
-            if (isleft){
-                lander.updatePosition(spaceShip.getPosition() + sf::Vector2f(16*scale,0), deltaTime);
-            }
-            else{
-                lander.updatePosition(spaceShip.getPosition() - sf::Vector2f(16*scale,0), deltaTime);
-            }
-
-                lander.updatePosition(spaceShip.getPosition() + sf::Vector2f(16*scale,0), deltaTime);
+                lander.updatePosition(humanoids, deltaTime);
                 lander.draw(window);
                 lander.missileDraw(window);
+
+                // Draw captured humanoids
+                if (lander.isCarryingHumanoid) {
+                CapturedHumanoid capturedHumanoid;
+                sf::Vector2f capturedHumanoidOffset;
+                capturedHumanoidOffset = sf::Vector2f(0.0f, 50);
+                capturedHumanoid.setPosition(lander.getPosition() + capturedHumanoidOffset);
+                capturedHumanoid.updatePosition(deltaTime);
+                capturedHumanoid.draw(window);
+                }
                 
            }
         
@@ -359,16 +393,19 @@ int main(){
            for (auto& lander : landers){
             lander.missileShoot(deltaTime, gameWidth, gameHeight, spaceShip.getPosition());
             // Update and draw the enemy
-            if (isleft){
-                lander.updatePosition(spaceShip.getPosition() + sf::Vector2f(16*scale,0), deltaTime);
-            }
-            else{
-                lander.updatePosition(spaceShip.getPosition() - sf::Vector2f(16*scale,0), deltaTime);
-            }
-
-                lander.updatePosition(spaceShip.getPosition() + sf::Vector2f(16*scale,0), deltaTime);
+                lander.updatePosition(humanoids, deltaTime);
                 lander.draw(window);
                 lander.missileDraw(window);
+
+                // Draw captured humanoids
+                if (lander.isCarryingHumanoid) {
+                CapturedHumanoid capturedHumanoid;
+                sf::Vector2f capturedHumanoidOffset;
+                capturedHumanoidOffset = sf::Vector2f(0.0f, 50);
+                capturedHumanoid.setPosition(lander.getPosition() + capturedHumanoidOffset);
+                capturedHumanoid.updatePosition(deltaTime);
+                capturedHumanoid.draw(window);
+                }
                 
            }
 

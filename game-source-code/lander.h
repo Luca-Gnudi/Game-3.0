@@ -11,6 +11,7 @@
 #include "missile.h"
 #include "explosion.h"
 #include "SpaceShip.h"
+#include "humanoid.h"
 #include "CapturedHumanoid.h"
 
 class Lander {
@@ -18,7 +19,7 @@ public:
 
     Lander(); // Constructor
     sf::FloatRect getHitBox();
-    void updatePosition(sf::Vector2f spaceshipPosition, float deltaTime);
+    void updatePosition(const std::vector<Humanoid>& humanoids, float deltaTime);
     void draw(sf::RenderWindow& window);
     sf::Vector2f getPosition() const;
 
