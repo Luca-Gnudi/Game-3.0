@@ -54,7 +54,7 @@ private:
     Explosion explosion;
 
     sf::Vector2f capturedHumanoidPosition;
-    CapturedHumanoid capturedHumanoid;
+
 };
 
 #endif

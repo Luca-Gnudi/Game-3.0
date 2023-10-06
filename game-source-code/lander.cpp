@@ -24,7 +24,6 @@ Lander::Lander(sf::Vector2f startPosition) : destroyed(false), explosion(startPo
     maxDelay = 10.0f; // Maximum delay in seconds
     randomDelay = minDelay + static_cast<float>(std::rand()) / (RAND_MAX / (maxDelay - minDelay));
 
-    capturedHumanoid.setActive(false);
 }
 
 void Lander::updatePosition(const std::vector<Humanoid>& humanoids, float deltaTime) {
@@ -61,9 +60,6 @@ void Lander::updatePosition(const std::vector<Humanoid>& humanoids, float deltaT
         // The lander's behavior when carrying a humanoid
         float moveSpeed = 100.0f; // Adjust the upward speed as needed
         landerSprite.move(0.0f, -moveSpeed * deltaTime);
-
-        // Move the captured humanoid along with the lander
-        capturedHumanoidPosition.y -= moveSpeed * deltaTime;
 
         // Check if the lander is offscreen at the top and release the humanoid
         if (landerSprite.getPosition().y < 0) {

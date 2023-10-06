@@ -244,6 +244,12 @@ int main(){
                     if (lander.getHitBox().intersects(bulletHitBox)) {
                     // Bullet hit the lander
                     bullet.setActive(false); // Deactivate the bullet
+                    if (lander.isCarryingHumanoid){
+                        for (auto& capturedHumanoid : capturedHumanoids){
+                            capturedHumanoid.setActive(true);
+                            capturedHumanoid.setPosition(lander.getPosition());
+                        }
+                    }
                     lander.destroy();
                     landerShot++;
    
@@ -281,6 +287,13 @@ int main(){
                     humanoids.erase(std::remove_if(humanoids.begin(), humanoids.end(),
                     [&humanoid](const Humanoid& h) { return &h == &humanoid; }),
                     humanoids.end());
+
+                    sf::Vector2f capturedHumanoidOffset;
+                    capturedHumanoidOffset = sf::Vector2f(0.0f, 50);
+                    CapturedHumanoid newCapturedHumanoid;
+                    newCapturedHumanoid.setPosition(lander.getPosition() + capturedHumanoidOffset);
+                    newCapturedHumanoid.setActive(false);
+                    capturedHumanoids.push_back(newCapturedHumanoid);
                     }
                 }
                 if (humanoids.empty()){
@@ -322,12 +335,12 @@ int main(){
 
                 // Draw captured humanoids
                 if (lander.isCarryingHumanoid) {
-                CapturedHumanoid capturedHumanoid;
-                sf::Vector2f capturedHumanoidOffset;
-                capturedHumanoidOffset = sf::Vector2f(0.0f, 50);
+                for (auto& capturedHumanoid : capturedHumanoids){
+                sf::Vector2f capturedHumanoidOffset = sf::Vector2f(0.0f, 50);
                 capturedHumanoid.setPosition(lander.getPosition() + capturedHumanoidOffset);
                 capturedHumanoid.updatePosition(deltaTime);
                 capturedHumanoid.draw(window);
+                }
                 }
                 
            }
@@ -353,6 +366,11 @@ int main(){
 
             for (auto& humanoid : humanoids) {
                 humanoid.draw(window);
+            }
+
+            for (auto& capturedHumanoid : capturedHumanoids){
+                capturedHumanoid.updatePosition(deltaTime);
+                capturedHumanoid.draw(window);
             }
         }
         else{
