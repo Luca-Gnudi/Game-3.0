@@ -17,7 +17,7 @@ void CapturedHumanoid::setPosition(const sf::Vector2f& position) {
 void CapturedHumanoid::updatePosition(float deltaTime) {
     if(active){
     // Adjust the speed as needed
-    float moveSpeed = 100.0f;
+    float moveSpeed = 2000.0f;
     capturedhumanoidSprite.move(0.0f, moveSpeed * deltaTime);
     }
 }

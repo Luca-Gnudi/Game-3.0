@@ -88,6 +88,7 @@ int main(){
 
     std::vector<Humanoid> humanoids;
     std::vector<CapturedHumanoid> capturedHumanoids;
+    std::vector<CapturedHumanoid> fallingHumanoids;
     // Define a timer for spawning landers
     sf::Clock landerSpawnTimer;
     float spawnInterval = 5.0f;
@@ -120,6 +121,8 @@ int main(){
 		    // Reset the position of space ship and clear alien objects
 		    spaceShip.setPosition(spaceShipPosition);
             humanoids.clear();
+            capturedHumanoids.clear();
+            fallingHumanoids.clear();
             for (auto i=0; i<5; ++i){
                 float xPosition = i * gameWidth / 5;
                 float yPosition = gameHeight - 150;
@@ -244,12 +247,6 @@ int main(){
                     if (lander.getHitBox().intersects(bulletHitBox)) {
                     // Bullet hit the lander
                     bullet.setActive(false); // Deactivate the bullet
-                    if (lander.isCarryingHumanoid){
-                        for (auto& capturedHumanoid : capturedHumanoids){
-                            capturedHumanoid.setActive(true);
-                            capturedHumanoid.setPosition(lander.getPosition());
-                        }
-                    }
                     lander.destroy();
                     landerShot++;
    
@@ -258,6 +255,14 @@ int main(){
                     // Restart the explosion animation
                     newExplosion.startAnimation();
                     explosions.push_back(newExplosion);
+
+                    if (lander.isCarryingHumanoid){
+                        for (auto& capturedHumanoid : capturedHumanoids){
+                            capturedHumanoid.setActive(true);
+                            fallingHumanoids.push_back(capturedHumanoid);
+                            lander.carryingHumanoid(false);
+                        }
+                    }
 
                     // Remove destroyed landers from the vector
                     landers.erase(std::remove_if(landers.begin(), landers.end(),[](const Lander& lander) { return !lander.isActive(); }), landers.end());
@@ -371,6 +376,10 @@ int main(){
             for (auto& capturedHumanoid : capturedHumanoids){
                 capturedHumanoid.updatePosition(deltaTime);
                 capturedHumanoid.draw(window);
+            }
+            for (auto& fallingHumanoid : fallingHumanoids){
+                fallingHumanoid.updatePosition(deltaTime);
+                fallingHumanoid.draw(window);
             }
         }
         else{

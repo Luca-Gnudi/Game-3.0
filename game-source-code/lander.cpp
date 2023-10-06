@@ -171,3 +171,7 @@ void Lander::moveWithHumanoid(float deltaTime) {
         }
     }
 }
+
+void Lander::carryingHumanoid(bool carryingHumanoid){
+    isCarryingHumanoid = carryingHumanoid;
+}
