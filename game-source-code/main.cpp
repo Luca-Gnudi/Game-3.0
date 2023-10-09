@@ -337,9 +337,9 @@ int main(){
                         fallingHumanoid.setPosition(spaceShip.getPosition() + fallingHumanoidOffset);
                     }
                     else{
-                    sf::Vector2f fallingHumanoidOffset;
-                    fallingHumanoidOffset = sf::Vector2f(-50.0f, 40.0f);
-                    fallingHumanoid.setPosition(spaceShip.getPosition() + fallingHumanoidOffset);
+                       sf::Vector2f fallingHumanoidOffset;
+                       fallingHumanoidOffset = sf::Vector2f(-50.0f, 40.0f);
+                       fallingHumanoid.setPosition(spaceShip.getPosition() + fallingHumanoidOffset);
                     }
                 }
 
@@ -351,6 +351,17 @@ int main(){
                     fallingHumanoids.erase(std::remove_if(fallingHumanoids.begin(), fallingHumanoids.end(),
                     [&fallingHumanoid](const CapturedHumanoid& h) { return &h == &fallingHumanoid; }),
                     fallingHumanoids.end());
+                } else if (fallingHumanoid.getPosition().y > 700 && !fallingHumanoid.isActive()){
+                    fallingHumanoids.erase(std::remove_if(fallingHumanoids.begin(), fallingHumanoids.end(),
+                    [&fallingHumanoid](const CapturedHumanoid& h) { return &h == &fallingHumanoid; }),
+                    fallingHumanoids.end());
+                    
+                    float xPosition = spaceShip.getPosition().x;
+                    float yPosition = gameHeight - 150;
+
+                    sf::Vector2f startPosition(xPosition, yPosition);
+                    Humanoid newHumanoid(startPosition, 1.0, 1.0);
+                    humanoids.push_back(newHumanoid);
                 }
             }
               
