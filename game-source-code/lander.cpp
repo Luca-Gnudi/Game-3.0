@@ -74,7 +74,7 @@ sf::Vector2f Lander::getPosition() const {
 
 sf::FloatRect Lander::getHitBox() {
     sf::FloatRect landerHitBox;
-    auto scale = 5.5f;
+    auto scale = 2.5f;
 
     landerHitBox.left = landerSprite.getPosition().x + 5*scale;
     landerHitBox.top = landerSprite.getPosition().y + 7*scale;

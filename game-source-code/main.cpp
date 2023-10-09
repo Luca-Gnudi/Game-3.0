@@ -273,6 +273,21 @@ int main(){
 
                     break; // Exit the loop early, as we only need to handle one collision
                     }
+
+                    for (auto& capturedHumanoid : capturedHumanoids){
+                        if (capturedHumanoid.getHitBox().intersects(bulletHitBox)){
+                            lander.carryingHumanoid(false);
+
+                            Explosion newExplosion(capturedHumanoid.getPosition(), 6, 0.005f);
+                            newExplosion.startAnimation();
+                            explosions.push_back(newExplosion);
+
+                            capturedHumanoids.erase(std::remove_if(capturedHumanoids.begin(), capturedHumanoids.end(),
+                            [&capturedHumanoid](const CapturedHumanoid& h) { return &h == &capturedHumanoid; }),
+                            capturedHumanoids.end());
+
+                        }
+                    }
                   
                   if (landerShot == 10){
                     isPlaying = false;
@@ -362,6 +377,20 @@ int main(){
                     sf::Vector2f startPosition(xPosition, yPosition);
                     Humanoid newHumanoid(startPosition, 1.0, 1.0);
                     humanoids.push_back(newHumanoid);
+                }
+
+                for (auto& bullet : bullets){
+                    sf::FloatRect bulletHitBox = bullet.getHitBox();
+                    if (fallingHumanoid.getHitBox().intersects(bulletHitBox)){
+                        Explosion newExplosion(fallingHumanoid.getPosition(), 6, 0.005f);
+                        newExplosion.startAnimation();
+                        explosions.push_back(newExplosion);
+
+                        fallingHumanoids.erase(std::remove_if(fallingHumanoids.begin(), fallingHumanoids.end(),
+                        [&fallingHumanoid](const CapturedHumanoid& h) { return &h == &fallingHumanoid; }),
+                        fallingHumanoids.end());
+                    }
+
                 }
             }
               
