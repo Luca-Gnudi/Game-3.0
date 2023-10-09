@@ -251,8 +251,6 @@ int main(){
                     landerShot++;
    
                     Explosion newExplosion(lander.getPosition(), 6, 0.005f);
-
-                    // Restart the explosion animation
                     newExplosion.startAnimation();
                     explosions.push_back(newExplosion);
 
@@ -261,6 +259,10 @@ int main(){
                             capturedHumanoid.setActive(true);
                             fallingHumanoids.push_back(capturedHumanoid);
                             lander.carryingHumanoid(false);
+
+                            capturedHumanoids.erase(std::remove_if(capturedHumanoids.begin(), capturedHumanoids.end(),
+                            [&capturedHumanoid](const CapturedHumanoid& h) { return &h == &capturedHumanoid; }),
+                            capturedHumanoids.end());
                         }
                     }
 
@@ -314,8 +316,41 @@ int main(){
                     // Check if the lander is offscreen at the top and release the humanoid
                     if (lander.getPosition().y < 10 ) {
                     lander.isCarryingHumanoid = false;
-                    // You can perform additional actions here, e.g., award points
+                    for (auto& capturedHumanoid : capturedHumanoids){
+                        capturedHumanoids.erase(std::remove_if(capturedHumanoids.begin(), capturedHumanoids.end(),
+                        [&capturedHumanoid](const CapturedHumanoid& h) { return &h == &capturedHumanoid; }),
+                        capturedHumanoids.end());
                     }
+                    
+                    }
+                }
+            }
+
+            for (auto& fallingHumanoid : fallingHumanoids){
+                sf::Vector2f direction = fallingHumanoid.getPosition() - spaceShip.getPosition();
+                float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+                if ((distance < 70 && isleft) || (distance < 110 && !isleft)){
+                    fallingHumanoid.setActive(false);
+                    if (isleft){
+                        sf::Vector2f fallingHumanoidOffset;
+                        fallingHumanoidOffset = sf::Vector2f(0.0f, 40.0f);
+                        fallingHumanoid.setPosition(spaceShip.getPosition() + fallingHumanoidOffset);
+                    }
+                    else{
+                    sf::Vector2f fallingHumanoidOffset;
+                    fallingHumanoidOffset = sf::Vector2f(-50.0f, 40.0f);
+                    fallingHumanoid.setPosition(spaceShip.getPosition() + fallingHumanoidOffset);
+                    }
+                }
+
+                if (fallingHumanoid.getPosition().y > 700 && fallingHumanoid.isActive()){
+                    Explosion newExplosion(fallingHumanoid.getPosition(), 6, 0.005f);
+                    newExplosion.startAnimation();
+                    explosions.push_back(newExplosion);
+
+                    fallingHumanoids.erase(std::remove_if(fallingHumanoids.begin(), fallingHumanoids.end(),
+                    [&fallingHumanoid](const CapturedHumanoid& h) { return &h == &fallingHumanoid; }),
+                    fallingHumanoids.end());
                 }
             }
               
