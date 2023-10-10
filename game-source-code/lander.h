@@ -35,7 +35,6 @@ public:
     bool isActive() const;
 
     void captureHumanoid(const Humanoid& humanoid);
-    void moveWithHumanoid(float deltaTime);
 
     bool isCarryingHumanoid;
     void carryingHumanoid(bool carryingHumanoid);

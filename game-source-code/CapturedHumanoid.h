@@ -24,6 +24,7 @@ public:
 private:
     sf::Sprite capturedhumanoidSprite;
     sf::Texture *capturedhumanoidTexture;
+    sf::FloatRect capturedHumanoidHitBox;
 
     float velocity;
     int direction;

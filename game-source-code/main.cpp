@@ -148,7 +148,7 @@ int main(){
                 int direction = (i % 2 == 0) ? 1 : -1; // Alternating direction
 
                 sf::Vector2f startPosition(xPosition, yPosition);
-                Humanoid newHumanoid(startPosition, direction, 0.5);
+                Humanoid newHumanoid(startPosition, direction, 0.5f);
                 humanoids.push_back(newHumanoid);
             }
             landers.clear();
@@ -311,7 +311,6 @@ int main(){
             }
             for (Lander& lander : landers) {
                 if (lander.isCarryingHumanoid) {
-                    lander.moveWithHumanoid(deltaTime);
 
                     // Check if the lander is offscreen at the top and release the humanoid
                     if (lander.getPosition().y < 10 ) {
@@ -359,7 +358,7 @@ int main(){
                     float yPosition = gameHeight - 150;
 
                     sf::Vector2f startPosition(xPosition, yPosition);
-                    Humanoid newHumanoid(startPosition, 1.0, 1.0);
+                    Humanoid newHumanoid(startPosition, 1.0, 0.5f);
                     humanoids.push_back(newHumanoid);
                 }
 

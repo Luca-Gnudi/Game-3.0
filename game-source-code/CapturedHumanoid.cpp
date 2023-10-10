@@ -23,7 +23,11 @@ void CapturedHumanoid::updatePosition(float deltaTime) {
 }
 
 sf::FloatRect CapturedHumanoid::getHitBox() {
-    return capturedhumanoidSprite.getGlobalBounds();
+    capturedHumanoidHitBox.left = capturedhumanoidSprite.getPosition().x + 20.0;
+    capturedHumanoidHitBox.top = capturedhumanoidSprite.getPosition().y + 30.0;
+    capturedHumanoidHitBox.width = 30.0;
+    capturedHumanoidHitBox.height = 30.0;
+    return capturedHumanoidHitBox;
 }
 
 void CapturedHumanoid::draw(sf::RenderWindow& window) {

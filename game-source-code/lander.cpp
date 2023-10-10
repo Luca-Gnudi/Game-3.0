@@ -62,7 +62,7 @@ void Lander::updatePosition(const std::vector<Humanoid>& humanoids, float deltaT
     landerSprite.move(direction * moveSpeed * deltaTime);
   } else {
         // The lander's behavior when carrying a humanoid
-        float moveSpeed = 100.0f; // Adjust the upward speed as needed
+        float moveSpeed = 1000.0f; // Adjust the upward speed as needed
         landerSprite.move(0.0f, -moveSpeed * deltaTime);
 
         // Move the captured humanoid along with the lander
@@ -164,19 +164,6 @@ void Lander::captureHumanoid(const Humanoid& humanoid) {
     if (!isCarryingHumanoid) {
         isCarryingHumanoid = true;
         capturedHumanoidPosition = humanoid.getPosition();
-    }
-}
-
-void Lander::moveWithHumanoid(float deltaTime) {
-    if (isCarryingHumanoid) {
-        // Move the lander straight up
-        float moveSpeed = 200.0f; // Adjust the speed as needed
-        landerSprite.move(0.0f, -moveSpeed * deltaTime);
-
-        // Check if the lander is offscreen at the top and release the humanoid
-        if (landerSprite.getPosition().y < 0) {
-            isCarryingHumanoid = false;
-        }
     }
 }
 

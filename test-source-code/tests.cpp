@@ -121,9 +121,11 @@ TEST_CASE("Lander spawns within specified boundaries of screen"){
 TEST_CASE("Lander moves upwards to the top of the screen once it has captured a humanoid"){
     std::srand(500);
     Lander lander;
-    
     sf::Vector2f landerStartPosition = lander.getPosition();
+
+    std::vector<Humanoid> humanoids;
     Humanoid humanoid(sf::Vector2f(500.0f, 500.0f), 1, 0);
+    humanoids.push_back(humanoid);
 
     lander.captureHumanoid(humanoid);
     lander.carryingHumanoid(true);
@@ -132,11 +134,33 @@ TEST_CASE("Lander moves upwards to the top of the screen once it has captured a 
     int numUpdates = 10;    // Number of updates to simulate
 
     for (int i = 0; i < numUpdates; ++i) {
-        lander.moveWithHumanoid(deltaTime);
+        lander.updatePosition(humanoids, deltaTime);
     }
 
     CHECK(lander.getPosition().y < landerStartPosition.y);
+}
 
+TEST_CASE("Lander releases captured humanoid when it reaches the top and continues to move towards another humanoid like normal"){
+    std::srand(500);
+    Lander lander;
+    sf::Vector2f landerStartPosition = lander.getPosition();
+
+    std::vector<Humanoid> humanoids;
+    Humanoid humanoid(sf::Vector2f(500.0f, 500.0f), 1, 0);
+    humanoids.push_back(humanoid);
+
+    lander.captureHumanoid(humanoid);
+    lander.carryingHumanoid(true);
+
+    float deltaTime = 0.1f; // Time increment for each update
+    int numUpdates = 1000;    // Number of updates to simulate
+
+    for (int i = 0; i < numUpdates; ++i) {
+        lander.updatePosition(humanoids, deltaTime);
+    }
+
+    CHECK(lander.getPosition().x == doctest::Approx(humanoid.getPosition().x).epsilon(10));
+    CHECK(lander.getPosition().y == doctest::Approx(humanoid.getPosition().y).epsilon(10));
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
