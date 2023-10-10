@@ -15,9 +15,11 @@ void CapturedHumanoid::setPosition(const sf::Vector2f& position) {
 }
 
 void CapturedHumanoid::updatePosition(float deltaTime) {
+    if (active){
     // Adjust the speed as needed
-    float moveSpeed = 100.0f;
-    capturedhumanoidSprite.move(0.0f, -moveSpeed * deltaTime);
+    float moveSpeed = 2000.0f;
+    capturedhumanoidSprite.move(0.0f, moveSpeed * deltaTime);
+    }
 }
 
 sf::FloatRect CapturedHumanoid::getHitBox() {
@@ -34,4 +36,12 @@ void CapturedHumanoid::setActive(bool isActive) {
 
 bool CapturedHumanoid::isActive() const {
     return active;
+}
+
+sf::Vector2f CapturedHumanoid::getPosition() const {
+    return capturedhumanoidSprite.getPosition();
+}
+
+float CapturedHumanoid::getHeight() const {
+    return capturedhumanoidSprite.getGlobalBounds().height;
 }

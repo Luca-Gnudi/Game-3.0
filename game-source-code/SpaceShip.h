@@ -24,6 +24,8 @@ private:
     //bool moveSpaceShip = false; //bool to show if the view or the spaceShip should be moved.
     sf::Sprite BackGround;
     sf::Texture spaceShipTexture;
+    sf::Clock bulletCooldownTimer;
+    sf::Time bulletCooldownDuration;
 
 };
 

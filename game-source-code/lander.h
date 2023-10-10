@@ -38,7 +38,8 @@ public:
     void moveWithHumanoid(float deltaTime);
 
     bool isCarryingHumanoid;
-    
+    void carryingHumanoid(bool carryingHumanoid);
+
 private:
     sf::Sprite landerSprite;
     sf::Texture *landerTexture;

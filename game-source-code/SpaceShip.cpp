@@ -2,7 +2,8 @@
 #include <iostream>
 #include <SFML/Graphics/RenderTarget.hpp>
 
-SpaceShip::SpaceShip(const float& scale, const float& speed, sf::Vector2f& StartPosition, sf::Sprite& Background){
+SpaceShip::SpaceShip(const float& scale, const float& speed, sf::Vector2f& StartPosition, sf::Sprite& Background)
+  : bulletCooldownDuration(sf::seconds(0.5f)) {
     //Initialise the lazer sprite.
     if (!spaceShipTexture.loadFromFile("resources/assets/space_ship.png")) {
         std::cout << "Failed to load SpaceShip image";
@@ -79,7 +80,11 @@ bool SpaceShip::SpaceShipControl(const float& deltaTime, const float& bulletSpee
             }
                 
             //Shooting lazers.
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && bulletCooldownTimer.getElapsedTime() >= bulletCooldownDuration){
+
+                // Reset the cooldown timer
+                bulletCooldownTimer.restart();
+
                 if (isleft){
                     Bullet bullet(spaceShip.getPosition(), -1, bulletSpeed);
                     bullet.setActive(true);

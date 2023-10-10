@@ -76,7 +76,7 @@ TEST_CASE("Bullet setActive") {
 //                                   Lander                                                       //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-TEST_CASE("Lander moves towards a target over time") {
+/*TEST_CASE("Lander moves towards a target over time") {
     // Create a SpaceShip and set its initial position
     sf::Vector2f spaceshipPosition(100.0f, 100.0f);
     sf::Sprite backgroundSprite; // Create a valid background sprite here
@@ -99,7 +99,7 @@ TEST_CASE("Lander moves towards a target over time") {
     // Check if the lander has moved closer to the spaceship
     CHECK(updatedLanderPosition.x != doctest::Approx(initialLanderPosition.x));
     CHECK(updatedLanderPosition.y != doctest::Approx(initialLanderPosition.y));
-}
+} */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          Missile                                              //

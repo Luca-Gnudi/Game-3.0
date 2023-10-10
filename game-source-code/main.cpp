@@ -107,6 +107,8 @@ int main(){
     std::vector<Explosion> explosions;
 
     std::vector<Humanoid> humanoids;
+    std::vector<CapturedHumanoid> capturedHumanoids;
+    std::vector<CapturedHumanoid> fallingHumanoids;
     // Define a timer for spawning landers
     sf::Clock landerSpawnTimer;
     float spawnInterval = 5.0f;
@@ -135,8 +137,10 @@ int main(){
 		    isPlaying = true;
 		    clock.restart();
 
-		    // Reset the position of space ship and clear alien objects
+		    // Reset the position of space ship and clear all other objects
             humanoids.clear();
+            capturedHumanoids.clear();
+            fallingHumanoids.clear();
             for (auto i=0; i<5; ++i){
                 auto landWidth = gameWidth * 5;
                 float xPosition = i * landWidth / 5;
@@ -231,10 +235,21 @@ int main(){
                     landerShot++;
    
                     Explosion newExplosion(lander.getPosition(), 6, 0.005f);
-
-                    // Restart the explosion animation
                     newExplosion.startAnimation();
                     explosions.push_back(newExplosion);
+
+                    if (lander.isCarryingHumanoid){
+                        for (auto& capturedHumanoid : capturedHumanoids){
+                            capturedHumanoid.setActive(true);
+                            capturedHumanoid.setPosition(lander.getPosition());
+                            fallingHumanoids.push_back(capturedHumanoid);
+                            lander.carryingHumanoid(false);
+
+                            capturedHumanoids.erase(std::remove_if(capturedHumanoids.begin(), capturedHumanoids.end(),
+                            [&capturedHumanoid](const CapturedHumanoid& h) { return &h == &capturedHumanoid; }),
+                            capturedHumanoids.end());
+                        }
+                    }
 
                     // Remove destroyed landers from the vector
                     landers.erase(std::remove_if(landers.begin(), landers.end(),[](const Lander& lander) { return !lander.isActive(); }), landers.end());
@@ -242,6 +257,21 @@ int main(){
                     // Optionally, you can handle other actions when the lander is destroyed
 
                     break; // Exit the loop early, as we only need to handle one collision
+                    }
+                    
+                    for (auto& capturedHumanoid : capturedHumanoids){
+                        if (capturedHumanoid.getHitBox().intersects(bulletHitBox)){
+                            lander.carryingHumanoid(false);
+
+                            Explosion newExplosion(capturedHumanoid.getPosition(), 6, 0.005f);
+                            newExplosion.startAnimation();
+                            explosions.push_back(newExplosion);
+
+                            capturedHumanoids.erase(std::remove_if(capturedHumanoids.begin(), capturedHumanoids.end(),
+                            [&capturedHumanoid](const CapturedHumanoid& h) { return &h == &capturedHumanoid; }),
+                            capturedHumanoids.end());
+
+                        }
                     }
                   
                   if (landerShot == 10){
@@ -258,12 +288,19 @@ int main(){
                     float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
 
                     // Adjust the distance threshold as needed
-                    if (lander.getHitBox().intersects(humanoid.getHitBox())) {
+                    if (distance < 20) {
                     lander.captureHumanoid(humanoid);
                     // Remove the captured humanoid from the vector
                     humanoids.erase(std::remove_if(humanoids.begin(), humanoids.end(),
                     [&humanoid](const Humanoid& h) { return &h == &humanoid; }),
                     humanoids.end());
+
+                    sf::Vector2f capturedHumanoidOffset;
+                    capturedHumanoidOffset = sf::Vector2f(0.0f, 50);
+                    CapturedHumanoid newCapturedHumanoid;
+                    //newCapturedHumanoid.setPosition(lander.getPosition() + capturedHumanoidOffset);
+                    newCapturedHumanoid.setActive(false);
+                    capturedHumanoids.push_back(newCapturedHumanoid);
                     }
                 }
                 if (humanoids.empty()){
@@ -279,16 +316,73 @@ int main(){
                     // Check if the lander is offscreen at the top and release the humanoid
                     if (lander.getPosition().y < 10 ) {
                     lander.isCarryingHumanoid = false;
-                    // You can perform additional actions here, e.g., award points
+                    for (auto& capturedHumanoid : capturedHumanoids){
+                        capturedHumanoids.erase(std::remove_if(capturedHumanoids.begin(), capturedHumanoids.end(),
+                        [&capturedHumanoid](const CapturedHumanoid& h) { return &h == &capturedHumanoid; }),
+                        capturedHumanoids.end());
+                    }
                     }
                 }
             }
-        }
 
-        for (auto& bullet : bullets) {
-            bullet.update();
-        }
+            for (auto& fallingHumanoid : fallingHumanoids){
+                sf::Vector2f direction = fallingHumanoid.getPosition() - spaceShip.getPosition();
+                float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+                if ((distance < 70 && isleft) || (distance < 110 && !isleft)){
+                    fallingHumanoid.setActive(false);
+                    if (isleft){
+                        sf::Vector2f fallingHumanoidOffset;
+                        fallingHumanoidOffset = sf::Vector2f(0.0f, 40.0f);
+                        fallingHumanoid.setPosition(spaceShip.getPosition() + fallingHumanoidOffset);
+                    }
+                    else{
+                       sf::Vector2f fallingHumanoidOffset;
+                       fallingHumanoidOffset = sf::Vector2f(-50.0f, 40.0f);
+                       fallingHumanoid.setPosition(spaceShip.getPosition() + fallingHumanoidOffset);
+                    }
+                }
 
+                if (fallingHumanoid.getPosition().y > 700 && fallingHumanoid.isActive()){
+                    Explosion newExplosion(fallingHumanoid.getPosition(), 6, 0.005f);
+                    newExplosion.startAnimation();
+                    explosions.push_back(newExplosion);
+
+                    fallingHumanoids.erase(std::remove_if(fallingHumanoids.begin(), fallingHumanoids.end(),
+                    [&fallingHumanoid](const CapturedHumanoid& h) { return &h == &fallingHumanoid; }),
+                    fallingHumanoids.end());
+                } else if (fallingHumanoid.getPosition().y > 600 && !fallingHumanoid.isActive()){
+                    fallingHumanoids.erase(std::remove_if(fallingHumanoids.begin(), fallingHumanoids.end(),
+                    [&fallingHumanoid](const CapturedHumanoid& h) { return &h == &fallingHumanoid; }),
+                    fallingHumanoids.end());
+                    
+                    float xPosition = spaceShip.getPosition().x;
+                    float yPosition = gameHeight - 150;
+
+                    sf::Vector2f startPosition(xPosition, yPosition);
+                    Humanoid newHumanoid(startPosition, 1.0, 1.0);
+                    humanoids.push_back(newHumanoid);
+                }
+
+                for (auto& bullet : bullets){
+                    sf::FloatRect bulletHitBox = bullet.getHitBox();
+                    if (fallingHumanoid.getHitBox().intersects(bulletHitBox)){
+                        Explosion newExplosion(fallingHumanoid.getPosition(), 6, 0.005f);
+                        newExplosion.startAnimation();
+                        explosions.push_back(newExplosion);
+
+                        fallingHumanoids.erase(std::remove_if(fallingHumanoids.begin(), fallingHumanoids.end(),
+                        [&fallingHumanoid](const CapturedHumanoid& h) { return &h == &fallingHumanoid; }),
+                        fallingHumanoids.end());
+                    }
+
+                }
+            }
+
+            for (auto& bullet : bullets){
+                bullet.update();
+            }
+
+        }
 
          //rendering
         window.clear();
@@ -346,13 +440,21 @@ int main(){
                 sf::Vector2f capturedHumanoidOffset;
                 capturedHumanoidOffset = sf::Vector2f(0.0f, 50);
                 capturedHumanoid.setPosition(lander.getPosition() + capturedHumanoidOffset);
-                capturedHumanoid.updatePosition(deltaTime);
+                
                 capturedHumanoid.draw(window);
                 }
                 
            }
-        
 
+           for (auto& capturedHumanoid : capturedHumanoids){
+                capturedHumanoid.updatePosition(deltaTime);
+                capturedHumanoid.draw(window);
+            }
+
+           for (auto& fallingHumanoid : fallingHumanoids){
+                fallingHumanoid.updatePosition(deltaTime);
+                fallingHumanoid.draw(window);
+            }     
 
             //Drawing the minimap view.
             window.setView(MiniMapView);
@@ -403,11 +505,21 @@ int main(){
                 sf::Vector2f capturedHumanoidOffset;
                 capturedHumanoidOffset = sf::Vector2f(0.0f, 50);
                 capturedHumanoid.setPosition(lander.getPosition() + capturedHumanoidOffset);
-                capturedHumanoid.updatePosition(deltaTime);
+                
                 capturedHumanoid.draw(window);
                 }
                 
            }
+
+           for (auto& capturedHumanoid : capturedHumanoids){
+                capturedHumanoid.updatePosition(deltaTime);
+                capturedHumanoid.draw(window);
+            }
+
+           for (auto& fallingHumanoid : fallingHumanoids){
+                fallingHumanoid.updatePosition(deltaTime);
+                fallingHumanoid.draw(window);
+            }
 
         }
         else{
