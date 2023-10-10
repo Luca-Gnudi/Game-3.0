@@ -96,8 +96,8 @@ TEST_CASE("Lander moves towards the closest humanoid that is also a part of a ve
     }
 
     // Check if the lander has moved towards the closest humanoid (humanoid1)
-    REQUIRE(lander.getPosition().x == doctest::Approx(humanoid1.getPosition().x).epsilon(10));
-    REQUIRE(lander.getPosition().y == doctest::Approx(humanoid1.getPosition().y).epsilon(10));
+    CHECK(lander.getPosition().x == doctest::Approx(humanoid1.getPosition().x).epsilon(10));
+    CHECK(lander.getPosition().y == doctest::Approx(humanoid1.getPosition().y).epsilon(10));
 }
 
 TEST_CASE("Lander spawns within specified boundaries of screen"){
@@ -214,4 +214,25 @@ TEST_CASE("Humanoid turns around and moves in the opposite direction when it rea
 
     // Check if the Humanoid has changed direction and moved away from the turnaround point
     CHECK(humanoid.getPosition().x <= turnaroundPoint);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//                                   Captured Humanoid                                           //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+TEST_CASE("Captured Humanoid falls to the bottom of the screen while active"){
+    CapturedHumanoid fallingHumanoid;
+    sf::Vector2f startPosition = sf::Vector2f(3350.0f, 10.0f);
+    fallingHumanoid.setPosition(startPosition);
+    fallingHumanoid.setActive(true);
+
+    float deltaTime = 0.1f; // Time increment for each update
+    int numUpdates = 10;    // Number of updates to simulate
+
+    for (int i = 0; i < numUpdates; ++i) {
+        fallingHumanoid.updatePosition(deltaTime);
+    }
+
+    CHECK(fallingHumanoid.getPosition().y > startPosition.y);
+    
 }
