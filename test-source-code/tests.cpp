@@ -76,30 +76,29 @@ TEST_CASE("Bullet setActive") {
 //                                   Lander                                                       //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*TEST_CASE("Lander moves towards a target over time") {
-    // Create a SpaceShip and set its initial position
-    sf::Vector2f spaceshipPosition(100.0f, 100.0f);
-    sf::Sprite backgroundSprite; // Create a valid background sprite here
+TEST_CASE("Lander moves towards the closest humanoid that is also a part of a vector") {
+    std::srand(200);
+    
+    Lander lander;
+    std::vector<Humanoid> humanoids;
 
-    SpaceShip spaceShip(1.0f, 100.0f, spaceshipPosition, backgroundSprite);
+    Humanoid humanoid1(sf::Vector2f(3350.0f, 500.0f), 1, 0); //Closer humanoid in relation to the lander
+    Humanoid humanoid2(sf::Vector2f(6000.0f, 500.0f), 1, 0); //Farther humanoid in relation to the lander
 
-    // Create a Lander and set its initial position and speed
-    float distance = 200.0f; // Adjust the distance as needed
-    float bound_x = 0.0f;   // Adjust the bounds as needed
-    float bound_y = 1000.0f;
-    Lander lander(distance, spaceShip, bound_x, bound_y);
+    humanoids.push_back(humanoid1);
+    humanoids.push_back(humanoid2);
 
-    // Set the lander's initial position (you may adjust this as needed)
-    sf::Vector2f initialLanderPosition(500.0f, 500.0f);
-    lander.updatePosition(initialLanderPosition, 1.0f); // Simulate one second of movement
+    float deltaTime = 0.01f; // Time increment for each update
+    int numUpdates = 1000;    // Number of updates to simulate
 
-    // Get the updated position of the lander
-    sf::Vector2f updatedLanderPosition = lander.getPosition();
+    for (int i = 0; i < numUpdates; ++i) {
+        lander.updatePosition(humanoids, deltaTime);
+    }
 
-    // Check if the lander has moved closer to the spaceship
-    CHECK(updatedLanderPosition.x != doctest::Approx(initialLanderPosition.x));
-    CHECK(updatedLanderPosition.y != doctest::Approx(initialLanderPosition.y));
-} */
+    // Check if the lander has moved towards the closest humanoid (humanoid1)
+    REQUIRE(lander.getPosition().x == doctest::Approx(humanoid1.getPosition().x).epsilon(10));
+    REQUIRE(lander.getPosition().y == doctest::Approx(humanoid1.getPosition().y).epsilon(10));
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          Missile                                              //
