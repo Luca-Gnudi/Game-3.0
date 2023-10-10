@@ -100,6 +100,24 @@ TEST_CASE("Lander moves towards the closest humanoid that is also a part of a ve
     REQUIRE(lander.getPosition().y == doctest::Approx(humanoid1.getPosition().y).epsilon(10));
 }
 
+TEST_CASE("Lander spawns within specified boundaries of screen"){
+    for (int i = 0; i < 100; ++i) { // Spawn 100 landers for the test
+        Lander lander; // Simulate spawning a lander
+
+        // Check the position of the spawned lander
+        // Replace these values with your expected range based on your game logic
+        float minX = 0.0f;
+        float maxX = 6700.0f;
+        float minY = 0.0f;
+        float maxY = 600.0f;
+
+        REQUIRE(lander.getPosition().x >= minX);
+        REQUIRE(lander.getPosition().x <= maxX);
+        REQUIRE(lander.getPosition().y >= minY);
+        REQUIRE(lander.getPosition().y <= maxY);
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          Missile                                              //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
