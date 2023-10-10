@@ -140,7 +140,7 @@ TEST_CASE("Lander moves upwards to the top of the screen once it has captured a 
     CHECK(lander.getPosition().y < landerStartPosition.y);
 }
 
-TEST_CASE("Lander releases captured humanoid when it reaches the top and continues to move towards another humanoid like normal"){
+TEST_CASE("Lander releases captured humanoid when it reaches the top boundary and continues to move towards another humanoid like normal"){
     std::srand(500);
     Lander lander;
     sf::Vector2f landerStartPosition = lander.getPosition();
@@ -280,4 +280,20 @@ TEST_CASE("Captured Humanoid falls to the bottom of the screen while active"){
 
     CHECK(fallingHumanoid.getPosition().y > startPosition.y);
     
+}
+
+TEST_CASE("Captured Humanoid does not do anything on its own volition while inactive"){
+    CapturedHumanoid capturedHumanoid;
+    sf::Vector2f startPosition = sf::Vector2f(3350.0f, 10.0f);
+    capturedHumanoid.setPosition(startPosition);
+    capturedHumanoid.setActive(false);
+
+    float deltaTime = 0.1f; // Time increment for each update
+    int numUpdates = 10;    // Number of updates to simulate
+
+    for (int i = 0; i < numUpdates; ++i) {
+        capturedHumanoid.updatePosition(deltaTime);
+    }
+
+    CHECK(capturedHumanoid.getPosition() == startPosition);
 }
