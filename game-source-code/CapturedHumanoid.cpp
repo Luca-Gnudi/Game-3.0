@@ -1,5 +1,4 @@
 #include "capturedhumanoid.h"
-#include <iostream>
 
 CapturedHumanoid::CapturedHumanoid()  {
     capturedhumanoidTexture = new sf::Texture;
@@ -23,10 +22,10 @@ void CapturedHumanoid::updatePosition(float deltaTime) {
 }
 
 sf::FloatRect CapturedHumanoid::getHitBox() {
-    capturedHumanoidHitBox.left = capturedhumanoidSprite.getPosition().x + 20.0;
-    capturedHumanoidHitBox.top = capturedhumanoidSprite.getPosition().y + 30.0;
-    capturedHumanoidHitBox.width = 30.0;
-    capturedHumanoidHitBox.height = 30.0;
+    capturedHumanoidHitBox.left = capturedhumanoidSprite.getPosition().x + 10.0f;
+    capturedHumanoidHitBox.top = capturedhumanoidSprite.getPosition().y + 20.0;
+    capturedHumanoidHitBox.width = 40.0;
+    capturedHumanoidHitBox.height = 60.0;
     return capturedHumanoidHitBox;
 }
 

@@ -5,6 +5,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include "Bullet.h"
 #include <vector>
+#include <iostream>
 
 class SpaceShip{
 public:

@@ -1,7 +1,4 @@
 #include "missile.h"
-#include <SFML/Graphics.hpp>
-#include <iostream>
-#include <math.h>
 
 Missile::Missile(sf::Vector2f position, sf::Vector2f targetPosition) {
     missileTexture = new sf::Texture;
@@ -55,5 +52,5 @@ void Missile::draw(sf::RenderWindow& window) {
 bool Missile::isOutOfBounds(int gameWidth, int gameHeight) {
     // Check if the missile is out of bounds
     sf::Vector2f position = missileSprite.getPosition();
-    return position.x > gameWidth || position.x < 0 || position.y > gameHeight || position.y < 0;
+    return position.x > gameWidth * 5 || position.x < 0 || position.y > gameHeight || position.y < 0;
 }

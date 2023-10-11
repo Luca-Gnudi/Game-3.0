@@ -254,13 +254,12 @@ int main(){
                     // Remove destroyed landers from the vector
                     landers.erase(std::remove_if(landers.begin(), landers.end(),[](const Lander& lander) { return !lander.isActive(); }), landers.end());
 
-                    // Optionally, you can handle other actions when the lander is destroyed
-
                     break; // Exit the loop early, as we only need to handle one collision
                     }
                     
                     for (auto& capturedHumanoid : capturedHumanoids){
                         if (capturedHumanoid.getHitBox().intersects(bulletHitBox)){
+
                             lander.carryingHumanoid(false);
 
                             Explosion newExplosion(capturedHumanoid.getPosition(), 6, 0.005f);
@@ -298,16 +297,11 @@ int main(){
                     sf::Vector2f capturedHumanoidOffset;
                     capturedHumanoidOffset = sf::Vector2f(0.0f, 50);
                     CapturedHumanoid newCapturedHumanoid;
-                    //newCapturedHumanoid.setPosition(lander.getPosition() + capturedHumanoidOffset);
                     newCapturedHumanoid.setActive(false);
                     capturedHumanoids.push_back(newCapturedHumanoid);
                     }
                 }
-                if (humanoids.empty()){
-                    isPlaying = false;
-                    pauseMessage.setString("Game Over!\nAll astronauts captured!");
-                    break;
-                }
+
             }
             for (Lander& lander : landers) {
                 if (lander.isCarryingHumanoid) {
@@ -379,6 +373,11 @@ int main(){
 
             for (auto& bullet : bullets){
                 bullet.update();
+            }
+
+            if (humanoids.empty() && capturedHumanoids.empty() && fallingHumanoids.empty()){
+                isPlaying = false;
+                pauseMessage.setString("Game Over!\nAll astronauts captured!");
             }
 
         }
@@ -492,7 +491,7 @@ int main(){
         
            // Call updateMissile to handle missile shooting
            for (auto& lander : landers){
-            lander.missileShoot(deltaTime, gameWidth, gameHeight, spaceShip.getPosition());
+            lander.missileShoot(deltaTime, gameWidth * 5, gameHeight, spaceShip.getPosition());
             // Update and draw the enemy
                 lander.updatePosition(humanoids, deltaTime);
                 lander.draw(window);

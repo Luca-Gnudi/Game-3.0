@@ -1,5 +1,4 @@
 #include "explosion.h"
-#include <iostream>
 
 Explosion::Explosion(sf::Vector2f position = sf::Vector2f(0, 0), int totalFrames = 1, float frameDuration = 0.1f)
     : totalFrames(totalFrames), frameDuration(frameDuration), currentFrame(0), frameTimer(0), finished(false) {

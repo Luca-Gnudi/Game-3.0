@@ -1,13 +1,7 @@
 #include "lander.h"
-#include <SFML/Graphics.hpp>
-#include <iostream>
-#include <math.h>
-#include <vector>
-#include "missile.h"
-#include "explosion.h"
 
 Lander::Lander() 
-: destroyed(false), explosion(landerPosition, 6, 0.1f), isCarryingHumanoid(false) {
+: destroyed(false), isCarryingHumanoid(false) {
     landerTexture = new sf::Texture;
     if (!landerTexture->loadFromFile("resources/assets/lander.png")) {
         std::cout << "Could not load lander image file";
@@ -97,20 +91,7 @@ void Lander::draw(sf::RenderWindow& window) {
     if (!destroyed){
        window.draw(landerSprite);
     }
-    else {
-        // Draw explosion animation
-        explosion.draw(window);
-
-        // Check if the explosion animation has finished, and perform any cleanup
-        if (explosion.isFinished()) {
-            // Remove the lander or perform other cleanup actions as needed
-        }
-    }
-}
-
-void Lander::missileCreate(sf::Vector2f spaceshipPosition) {
-    Missile missile(landerSprite.getPosition(), spaceshipPosition);
-    missiles.push_back(missile);
+    
 }
 
 void Lander::missileShoot(float deltaTime, int gameWidth, int gameHeight, sf::Vector2f spaceshipPosition ) {
@@ -148,8 +129,6 @@ void Lander::missileDraw(sf::RenderWindow& window) {
 
 void Lander::destroy() {
     destroyed = true;
-    explosion.setPosition(landerSprite.getPosition());
-    explosion.startAnimation();
 }
 
 bool Lander::isDestroyed() const {

@@ -1,6 +1,4 @@
 #include "SpaceShip.h"
-#include <iostream>
-#include <SFML/Graphics/RenderTarget.hpp>
 
 SpaceShip::SpaceShip(const float& scale, const float& speed, sf::Vector2f& StartPosition, sf::Sprite& Background)
   : bulletCooldownDuration(sf::seconds(0.5f)) {

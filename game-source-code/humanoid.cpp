@@ -1,5 +1,4 @@
 #include "humanoid.h"
-#include <iostream>
 
 Humanoid::Humanoid( sf::Vector2f startPosition, int dir, float velocity)  
     : velocity(velocity), direction(dir), active(true){

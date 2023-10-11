@@ -8,8 +8,9 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <iostream>
+#include <math.h>
 #include "missile.h"
-#include "explosion.h"
 #include "SpaceShip.h"
 #include "humanoid.h"
 #include "CapturedHumanoid.h"
@@ -25,7 +26,6 @@ public:
 
     std::vector<Missile> missiles;
     
-    void missileCreate(sf::Vector2f spaceshipPosition);
     void missileUpdate(float deltaTime, int gameWidth, int gameHeight);
     void missileShoot(float deltaTime, int gameWidth, int gameHeight, sf::Vector2f spaceshipPosition);
     void missileDraw(sf::RenderWindow& window);
@@ -51,7 +51,6 @@ private:
     sf::Vector2f landerPosition;
 
     bool destroyed;
-    Explosion explosion;
 
     sf::Vector2f capturedHumanoidPosition;
     CapturedHumanoid capturedHumanoid;
