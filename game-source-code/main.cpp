@@ -1,13 +1,8 @@
-#include <SFML/Graphics.hpp>
-#include <cmath>
 #include "Bullet.h"
 #include "lander.h"
 #include "explosion.h"
 #include "humanoid.h"
-#include <SFML/Audio.hpp>
-#include <iostream>
-#include "Bullet.h"
-#include "lander.h"
+#include "capturedhumanoid.h"
 #include "SpaceShip.h"
 
 // Collision detection logic
@@ -61,9 +56,6 @@ int main(){
     const int ShipSize = 175;
     sf::Vector2f spaceShipPosition((Background.getGlobalBounds().width/2)-ShipSize, gameHeight/2);
     const float shipSpeed = 1000.f;
-
-    //Create a hitbox for the space ship
-    sf::FloatRect spaceShipHitBox;
 
     sf::Clock bulletCooldownTimer;
     const sf::Time bulletCooldownDuration = sf::seconds(0.5f); // Adjust the cooldown duration as needed
@@ -160,20 +152,12 @@ int main(){
        if (isPlaying) {
             float deltaTime = clock.restart().asSeconds();
             isleft = spaceShip.SpaceShipControl(deltaTime, bulletSpeed, gameWidth, gameHeight, bullets, GameView, window);
-
-
-            
+            sf::FloatRect spaceShipHitBox = spaceShip.getHitBox();
             // Check if it's time to spawn a new lander
             if (landerSpawnTimer.getElapsedTime().asSeconds() >= spawnInterval) {
-            // Create a new lander at a random position around the spaceship
+
             //sf::Vector2f randomOffset;
             float distance = 600.0f; // Adjust the distance from the spaceship
-            // float angle = static_cast<float>(std::rand() % 360); // Random angle in degrees
-            // randomOffset.x = std::cos(angle * 3.14159265f / 180) * distance;
-            // randomOffset.y = std::sin(angle * 3.14159265f / 180) * distance;
-            
-            // // Calculate the lander's position relative to the spaceship
-            //sf::Vector2f landerPosition //= spaceShip.getPosition() + randomOffset;
 
             float y_min = gameHeight*0.15;
             float y_max = gameHeight-300.f;
@@ -186,20 +170,6 @@ int main(){
             spawnInterval = 2.0f + static_cast<float>(std::rand()) / (RAND_MAX / 6.0f);
             landerSpawnTimer.restart();
 
-            }
-
-
-            if (isleft){
-            spaceShipHitBox.left = spaceShip.getPosition().x + 8*scale;
-            spaceShipHitBox.top = spaceShip.getPosition().y + 10*scale;
-            spaceShipHitBox.width = 14*scale;
-            spaceShipHitBox.height = 10*scale;
-            }
-            else{
-            spaceShipHitBox.left = spaceShip.getPosition().x - 20*scale;
-            spaceShipHitBox.top = spaceShip.getPosition().y + 10*scale;
-            spaceShipHitBox.width = 14*scale;
-            spaceShipHitBox.height = 10*scale;
             }
 
             // Check collision with missiles

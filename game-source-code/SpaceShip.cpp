@@ -31,6 +31,22 @@ sf::Vector2f SpaceShip::getPosition() const{
     return spaceShip.getPosition();
 }
 
+sf::FloatRect SpaceShip::getHitBox(){
+    if (isleft){
+            spaceShipHitBox.left = spaceShip.getPosition().x + 8*ShipScale;
+            spaceShipHitBox.top = spaceShip.getPosition().y + 10*ShipScale;
+            spaceShipHitBox.width = 14*ShipScale;
+            spaceShipHitBox.height = 10*ShipScale;
+            }
+            else{
+            spaceShipHitBox.left = spaceShip.getPosition().x - 20*ShipScale;
+            spaceShipHitBox.top = spaceShip.getPosition().y + 10*ShipScale;
+            spaceShipHitBox.width = 14*ShipScale;
+            spaceShipHitBox.height = 10*ShipScale;
+            }
+    return spaceShipHitBox;
+}
+
 bool SpaceShip::SpaceShipControl(const float& deltaTime, const float& bulletSpeed, const int& gameWidth, const int& gameHeight, std::vector<Bullet>& bullets, sf::View& GameView, sf::RenderWindow& window){
      // Moving the space ship vertically and horizontally
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && (spaceShip.getPosition().y > gameHeight*0.15)) {
@@ -93,7 +109,6 @@ bool SpaceShip::SpaceShipControl(const float& deltaTime, const float& bulletSpee
                     bullet.setActive(true);
                     bullets.push_back(bullet);
                 }
-                LazerSound.play();
             }
 
             return isleft;
