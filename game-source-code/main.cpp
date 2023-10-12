@@ -4,11 +4,7 @@
 #include "humanoid.h"
 #include "capturedhumanoid.h"
 #include "SpaceShip.h"
-
-// Collision detection logic
-bool isCollision(const sf::FloatRect& rect1, const sf::FloatRect& rect2) {
-    return rect1.intersects(rect2);
-}
+#include "CollisionManager.h"
 
 int main(){
     const int gameWidth = 1600; //The width of the game screen.
@@ -110,6 +106,8 @@ int main(){
     std::vector<Bullet> bullets;
     auto bulletSpeed = 40.f;
 
+    CollisionManager collisionManager;
+
     while (window.isOpen()){
         
         sf::Event event;
@@ -175,7 +173,7 @@ int main(){
             // Check collision with missiles
             for (auto& lander : landers){
             for (size_t i = 0; i < lander.missiles.size(); ++i) {
-               if (spaceShipHitBox.intersects(lander.missiles[i].getHitBox())) {
+               if (collisionManager.checkMissileSpaceShipCollision(lander.missiles[i],spaceShip)) {
                   isPlaying = false;
                   SetInstructionPosition = true;
                   pauseMessage.setString("Game Over!\nPress Enter to restart or\nescape to exit");
@@ -185,8 +183,7 @@ int main(){
             }
 
             for (auto& lander : landers){
-            sf::FloatRect landerHitBox = lander.getHitBox();
-            if (isCollision(spaceShipHitBox,landerHitBox)){
+            if (collisionManager.checkSpaceShipLanderCollision(spaceShip, lander)){
                 isPlaying = false;
                 SetInstructionPosition = true;
                 pauseMessage.setString("Game Over!\nPress Enter to restart or\nescape to exit");
@@ -197,8 +194,7 @@ int main(){
                 for (auto& bullet : bullets) {
                     if (!bullet.isActive()) continue; // Skip inactive bullets
 
-                    sf::FloatRect bulletHitBox = bullet.getHitBox();
-                    if (lander.getHitBox().intersects(bulletHitBox)) {
+                    if (collisionManager.checkBulletLanderCollision(bullet, lander)) {
                     // Bullet hit the lander
                     bullet.setActive(false); // Deactivate the bullet
                     lander.destroy();
@@ -228,7 +224,7 @@ int main(){
                     }
                     
                     for (auto& capturedHumanoid : capturedHumanoids){
-                        if (capturedHumanoid.getHitBox().intersects(bulletHitBox)){
+                        if (collisionManager.checkBulletCapturedHumanoidCollision(bullet, capturedHumanoid)){
 
                             lander.carryingHumanoid(false);
 
@@ -257,7 +253,7 @@ int main(){
                     float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
 
                     // Adjust the distance threshold as needed
-                    if (distance < 20) {
+                    if (collisionManager.checkHumanoidLanderCollision(humanoid, lander)) {
                     lander.captureHumanoid(humanoid);
                     // Remove the captured humanoid from the vector
                     humanoids.erase(std::remove_if(humanoids.begin(), humanoids.end(),
@@ -291,7 +287,7 @@ int main(){
             for (auto& fallingHumanoid : fallingHumanoids){
                 sf::Vector2f direction = fallingHumanoid.getPosition() - spaceShip.getPosition();
                 float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-                if ((distance < 70 && isleft) || (distance < 110 && !isleft)){
+                if (collisionManager.checkSpaceShipCapturedHumanoidCollision(spaceShip, fallingHumanoid) || (isleft && distance < 60) || (!isleft && distance < 90)){
                     fallingHumanoid.setActive(false);
                     if (isleft){
                         sf::Vector2f fallingHumanoidOffset;
@@ -327,8 +323,7 @@ int main(){
                 }
 
                 for (auto& bullet : bullets){
-                    sf::FloatRect bulletHitBox = bullet.getHitBox();
-                    if (fallingHumanoid.getHitBox().intersects(bulletHitBox)){
+                    if (collisionManager.checkBulletCapturedHumanoidCollision(bullet, fallingHumanoid)){
                         Explosion newExplosion(fallingHumanoid.getPosition(), 6, 0.005f);
                         newExplosion.startAnimation();
                         explosions.push_back(newExplosion);
@@ -337,7 +332,6 @@ int main(){
                         [&fallingHumanoid](const CapturedHumanoid& h) { return &h == &fallingHumanoid; }),
                         fallingHumanoids.end());
                     }
-
                 }
             }
 

@@ -38,3 +38,10 @@ bool CollisionManager::checkBulletCapturedHumanoidCollision(Bullet& bullet, Capt
 
     return bulletHitBox.intersects(capturedHumanoidHitBox);
 }
+
+bool CollisionManager::checkSpaceShipCapturedHumanoidCollision(SpaceShip& spaceShip, CapturedHumanoid& capturedHumanoid) {
+    sf::FloatRect spaceShipBounds = spaceShip.getHitBox();
+    sf::FloatRect capturedHumanoidBounds = capturedHumanoid.getHitBox();
+
+    return spaceShipBounds.intersects(capturedHumanoidBounds);
+}

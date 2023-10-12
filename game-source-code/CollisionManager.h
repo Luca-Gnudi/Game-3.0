@@ -11,16 +11,15 @@ class CollisionManager {
 public:
     CollisionManager();
 
-    // Add collision detection functions here
     bool checkMissileSpaceShipCollision(Missile& missile, SpaceShip& spaceShip);
     bool checkSpaceShipLanderCollision(SpaceShip& spaceShip, Lander& lander);
     bool checkBulletLanderCollision(Bullet& bullet, Lander& lander);
     bool checkHumanoidLanderCollision(Humanoid& humanoid, Lander& lander);
     bool checkBulletCapturedHumanoidCollision(Bullet& bullet, CapturedHumanoid& capturedHumanoid);
-    // Add more collision functions as needed
+    bool checkSpaceShipCapturedHumanoidCollision(SpaceShip& spaceShip, CapturedHumanoid& capturedHumanoid);
 
 private:
-    // Define any collision-related data structures here
+
 };
 
 #endif
